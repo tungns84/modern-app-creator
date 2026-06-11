@@ -115,7 +115,83 @@
 
 ## Traceability
 
-(Filled by roadmap — maps REQ-IDs to phases)
+Mapped by roadmap 2026-06-11. Coverage: 64/64 v1 requirements → 8 phases (every requirement in exactly one phase).
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| FOUND-01 | Phase 2 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 2 | Pending |
+| FOUND-04 | Phase 3 | Pending |
+| FOUND-05 | Phase 2 | Pending |
+| FOUND-06 | Phase 4 | Pending |
+| FOUND-07 | Phase 2 | Pending |
+| FOUND-08 | Phase 4 | Pending |
+| FOUND-09 | Phase 6 | Pending |
+| FOUND-10 | Phase 2 | Pending |
+| FOUND-11 | Phase 6 | Pending |
+| FOUND-12 | Phase 1 | Pending |
+| FOUND-13 | Phase 5 | Pending |
+| AUTH-01 | Phase 5 | Pending |
+| AUTH-02 | Phase 5 | Pending |
+| AUTH-03 | Phase 5 | Pending |
+| AUTH-04 | Phase 5 | Pending |
+| AUTH-05 | Phase 5 | Pending |
+| AUTH-06 | Phase 5 | Pending |
+| AUTH-07 | Phase 5 | Pending |
+| AUTH-08 | Phase 5 | Pending |
+| AUTH-09 | Phase 3 | Pending |
+| AUTHZ-01 | Phase 3 | Pending |
+| AUTHZ-02 | Phase 3 | Pending |
+| AUTHZ-03 | Phase 3 | Pending |
+| AUTHZ-04 | Phase 3 | Pending |
+| AUTHZ-05 | Phase 3 | Pending |
+| AUTHZ-06 | Phase 3 | Pending |
+| USER-01 | Phase 5 | Pending |
+| USER-02 | Phase 5 | Pending |
+| USER-03 | Phase 5 | Pending |
+| AUDIT-01 | Phase 5 | Pending |
+| AUDIT-02 | Phase 5 | Pending |
+| BPM-01 | Phase 7 | Pending |
+| BPM-02 | Phase 7 | Pending |
+| BPM-03 | Phase 7 | Pending |
+| BPM-04 | Phase 7 | Pending |
+| BPM-05 | Phase 7 | Pending |
+| BPM-06 | Phase 7 | Pending |
+| BPM-07 | Phase 7 | Pending |
+| BPM-08 | Phase 7 | Pending |
+| BPM-09 | Phase 7 | Pending |
+| BPM-10 | Phase 7 | Pending |
+| GATE-01 | Phase 2 | Pending |
+| GATE-02 | Phase 2 | Pending |
+| GATE-03 | Phase 4 | Pending |
+| GATE-04 | Phase 4 | Pending |
+| GATE-05 | Phase 4 | Pending |
+| GATE-06 | Phase 4 | Pending |
+| GATE-07 | Phase 4 | Pending |
+| GATE-08 | Phase 6 | Pending |
+| GATE-09 | Phase 3 | Pending |
+| GATE-10 | Phase 1 | Pending |
+| GATE-11 | Phase 3 | Pending |
+| GATE-12 | Phase 1 | Pending |
+| AGENT-01 | Phase 1 | Pending |
+| AGENT-02 | Phase 1 | Pending |
+| AGENT-03 | Phase 1 | Pending |
+| AGENT-04 | Phase 1 | Pending |
+| AGENT-05 | Phase 1 | Pending |
+| AGENT-06 | Phase 1 | Pending |
+| AGENT-07 | Phase 8 | Pending |
+| AGENT-08 | Phase 2 | Pending |
+| AGENT-09 | Phase 1 | Pending |
+
+**Cross-phase notes (requirement owned by one phase, touched by another):**
+- FOUND-01: module set completes (13th `bpm` module) in Phase 7; dynamic count assertion lands in Phase 2
+- FOUND-07: Web Vitals (frontend piece) finalizes with the deployed FE in Phase 6; backend observability is Phase 2
+- FOUND-13: sample BPM process added to seed data in Phase 7; core seed data is Phase 5
+- GATE-09: BPM path coverage extends in Phase 7; gate wires in Phase 3
+- GATE-12 / AGENT-02: smoke gate and skills extend to ONBOARDING/tutorial and get dogfood-validated in Phases 2–8; ship in Phase 1
+- AGENT-08: verify-fast budget re-audited in Phase 8; first met in Phase 2
 
 ---
 *Defined: 2026-06-11. Decisions: JDK 25 LTS; BPM bậc 1 ON; scopes v1 = own/tenant/all; +seed data, +BPM notify; MFA/invite in v1 after AuthN core.*
+*Traceability mapped: 2026-06-11 by roadmap (8 phases).*

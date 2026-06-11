@@ -1,0 +1,26 @@
+{
+  "id": "S0",
+  "name": "Control — no hooks, Write proceeds",
+  "expect": "control.txt created (proves headless tool execution works)",
+  "flags": [
+    "--allowedTools",
+    "Write"
+  ],
+  "sandbox": "C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S0-pvNb1p",
+  "observed": {
+    "file_created": true,
+    "hook_ran": false
+  },
+  "verdict": "TOOL-EXEC-OK",
+  "session": {
+    "exitCode": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "resultText": "`control.txt` created. Content: `CONTROL_OK`. Done.",
+    "isError": false,
+    "numTurns": 2,
+    "rawStdoutHead": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"api_error_status\":null,\"duration_ms\":15682,\"duration_api_ms\":13148,\"ttft_ms\":8181,\"ttft_stream_ms\":7492,\"time_to_request_ms\":405,\"num_turns\":2,\"result\":\"`control.txt` created. Content: `CONTROL_OK`. Done.\",\"stop_reason\":\"end_turn\",\"session_id\":\"d10268dd-6949-4ae8-b6fd-b116460fb54a\",\"total_cost_usd\":0.40386099999999997,\"usage\":{\"input_tokens\":7674,\"cache_creation_input_tokens\":13139,\"cache_read_input_tokens\":57291,\"output_tokens\":141,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":13139,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":27,\"cache_read_input_tokens\":31289,\"cache_creation_input_tokens\":7852,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7852},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-fable-5\":{\"inputTokens\":7674,\"outputTokens\":141,\"cacheReadInputTokens\":57291,\"cacheCreationInputTokens\":13139,\"webSearchRequests\":0,\"costUSD\":0.40386099999999997,\"contextWindow\":1000000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"c9f84613-7312-45c3-afe2-3d0968c8fbde\"}\n",
+    "stderrHead": ""
+  },
+  "hookLog": ""
+}

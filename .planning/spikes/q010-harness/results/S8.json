@@ -1,0 +1,28 @@
+{
+  "id": "S8",
+  "name": "$CLAUDE_PROJECT_DIR expansion on Windows (A2)",
+  "expect": "probe.mjs only runs if $CLAUDE_PROJECT_DIR expanded in the command line",
+  "flags": [
+    "--allowedTools",
+    "Write"
+  ],
+  "sandbox": "C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S8-IL79rK",
+  "observed": {
+    "probe_ran": true,
+    "env_value_set": true,
+    "env_points_to_sandbox": true,
+    "write_proceeded": true
+  },
+  "verdict": "EXPANSION-OK (cmdline + env)",
+  "session": {
+    "exitCode": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "resultText": "File created. `anyfile.txt` contain `PROBE`.",
+    "isError": false,
+    "numTurns": 2,
+    "rawStdoutHead": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"api_error_status\":null,\"duration_ms\":16024,\"duration_api_ms\":12537,\"ttft_ms\":6567,\"ttft_stream_ms\":5901,\"time_to_request_ms\":476,\"num_turns\":2,\"result\":\"File created. `anyfile.txt` contain `PROBE`.\",\"stop_reason\":\"end_turn\",\"session_id\":\"f045926c-1dc0-4351-b3a1-c703a4c6bf33\",\"total_cost_usd\":0.40349799999999997,\"usage\":{\"input_tokens\":7674,\"cache_creation_input_tokens\":13136,\"cache_read_input_tokens\":57288,\"output_tokens\":135,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":13136,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":23,\"cache_read_input_tokens\":31286,\"cache_creation_input_tokens\":7852,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7852},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-fable-5\":{\"inputTokens\":7674,\"outputTokens\":135,\"cacheReadInputTokens\":57288,\"cacheCreationInputTokens\":13136,\"webSearchRequests\":0,\"costUSD\":0.40349799999999997,\"contextWindow\":1000000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"045d62d3-b992-432e-bcae-2856343dc79a\"}\n",
+    "stderrHead": ""
+  },
+  "hookLog": ""
+}

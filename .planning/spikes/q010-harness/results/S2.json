@@ -1,0 +1,26 @@
+{
+  "id": "S2",
+  "name": "Edit deny",
+  "expect": "deny JSON blocks the Edit; content unchanged",
+  "flags": [
+    "--allowedTools",
+    "Edit,Read"
+  ],
+  "sandbox": "C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S2-fnpPSs",
+  "observed": {
+    "content_unchanged": true,
+    "hook_ran": true
+  },
+  "verdict": "DENY-HELD",
+  "session": {
+    "exitCode": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "resultText": "Edit blocked. Stopping as instructed.\n\n**Block reason (quoted exact):**\n```\nQ010-DENY: blocked by spike fixture hook. This is the Q-010 stability matrix probe — the action must not proceed.\n```\n\nFile unchanged. No retry.",
+    "isError": false,
+    "numTurns": 3,
+    "rawStdoutHead": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"api_error_status\":null,\"duration_ms\":19584,\"duration_api_ms\":17479,\"ttft_ms\":9103,\"ttft_stream_ms\":9100,\"time_to_request_ms\":622,\"num_turns\":3,\"result\":\"Edit blocked. Stopping as instructed.\\n\\n**Block reason (quoted exact):**\\n```\\nQ010-DENY: blocked by spike fixture hook. This is the Q-010 stability matrix probe — the action must not proceed.\\n```\\n\\nFile unchanged. No retry.\",\"stop_reason\":\"end_turn\",\"session_id\":\"82532137-6bf8-4c7d-bbc4-1624f5df41a1\",\"total_cost_usd\":0.21772474999999997,\"usage\":{\"input_tokens\":8765,\"cache_creation_input_tokens\":13418,\"cache_read_input_tokens\":96502,\"output_tokens\":453,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":13418,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":1091,\"output_tokens\":92,\"cache_read_input_tokens\":39203,\"cache_creation_input_tokens\":217,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":217},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-8\":{\"inputTokens\":8765,\"outputTokens\":453,\"cacheReadInputTokens\":96502,\"cacheCreationInputTokens\":13418,\"webSearchRequests\":0,\"costUSD\":0.21772474999999997,\"contextWindow\":1000000,\"maxOutputTokens\":64000}},\"permission_denials\":[{\"tool_name\":\"Edit\",\"tool_use_id\":\"toolu_01KoSvcdGjMRbw7eUtNPY4dx\",\"tool_input\":{\"file_path\":\"C:\\\\Users\\\\TungNS\\\\AppData\\\\Local\\\\Temp\\\\q010-S2-fnpPSs\\\\target.txt\",\"old_string\":\"original-content\",\"new_string\":\"HACKED\",\"replace_all\":false}}],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"9aef9e50-8cde-4ec6-b37a-8a22f5cebc3d\"}\n",
+    "stderrHead": ""
+  },
+  "hookLog": "deny-all ran tool=Edit cwd=C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S2-fnpPSs CLAUDE_PROJECT_DIR=C:/Users/TungNS/AppData/Local/Temp/q010-S2-fnpPSs\n"
+}

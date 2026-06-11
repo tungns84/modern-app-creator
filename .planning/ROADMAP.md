@@ -33,7 +33,20 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Developer can run `task up` on Windows/macOS/Linux without WSL and get the full local stack (PostgreSQL 16, Redis, Mailpit, MinIO, Keycloak, observability)
   4. Tech Lead can run `scripts/init.(sh|ps1)` to rename `com.acme.app` to team values with auto-commit; three-layer CLAUDE.md and the five skills exist within size budgets
   5. Spike reports (Q-010 hook matrix, Q-002 hosting API, Q-004 verify-fast gate-set, JDK 25 toolchain smoke on 3 OS) and required ADRs (permission sync FR-B11, undeclared-permission detection FR-B13, Redis-vs-Valkey) are written before dependent phases commit
-**Plans**: TBD
+**Plans**: 11 plans in 3 waves
+
+Plans:
+- [ ] 01-01-PLAN.md — Bootstrap: .gitattributes, tiers/waivers config, specs 001-006, constitution copy, PR template (wave 1)
+- [ ] 01-02-PLAN.md — Spikes Q-002 (GitHub PR-review mechanism) + Q-004 (verify-fast contract) (wave 1)
+- [ ] 01-03-PLAN.md — Spikes Q-010 (hook stability matrix) + JDK 25 toolchain smoke 3-OS (wave 1)
+- [ ] 01-04-PLAN.md — TDD: tier matcher + T3/T4 hooks + settings.json go-live (wave 2)
+- [ ] 01-05-PLAN.md — Local stack: compose 6 services + Taskfile up/down + os-matrix CI (wave 2)
+- [ ] 01-06-PLAN.md — TDD: init rename engine + sh/ps1 entry points + parity CI (wave 2)
+- [ ] 01-07-PLAN.md — TDD: CLAUDE.md render + size/smoke check tooling (wave 2)
+- [ ] 01-08-PLAN.md — ADRs 0001 Valkey, 0002 permission sync (FR-B11), 0003 undeclared-permission detection (FR-B13) (wave 2)
+- [ ] 01-09-PLAN.md — TDD: plan-compliance gate + workflow + CODEOWNERS + platform config (wave 3)
+- [ ] 01-10-PLAN.md — Three-layer CLAUDE.md content + claude-md-check CI (wave 3)
+- [ ] 01-11-PLAN.md — Five skills + lint trio + task verify/verify:fast spine (wave 3)
 
 ### Phase 2: Backend Foundation
 **Goal**: A green Spring Modulith skeleton with infra modules where architecture violations fail the build and cross-module events cannot be lost — built via the `new-module` skill as the first real dogfood
@@ -126,7 +139,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dogfood Bootstrap & Enforcement | 0/TBD | Not started | - |
+| 1. Dogfood Bootstrap & Enforcement | 0/11 | Not started | - |
 | 2. Backend Foundation | 0/TBD | Not started | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |

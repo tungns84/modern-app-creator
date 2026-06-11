@@ -1,0 +1,26 @@
+{
+  "id": "S5",
+  "name": "Hook crash fail-mode (A1)",
+  "expect": "crash (exit 1) — observe whether the Write proceeds (fail-open) or blocks",
+  "flags": [
+    "--allowedTools",
+    "Write"
+  ],
+  "sandbox": "C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S5-AyMjNR",
+  "observed": {
+    "file_created": true,
+    "hook_ran": true
+  },
+  "verdict": "FAIL-OPEN",
+  "session": {
+    "exitCode": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "resultText": "File created. `t3file.txt` with content `HELLO`. No block.",
+    "isError": false,
+    "numTurns": 2,
+    "rawStdoutHead": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"api_error_status\":null,\"duration_ms\":14427,\"duration_api_ms\":11947,\"ttft_ms\":6553,\"ttft_stream_ms\":6552,\"time_to_request_ms\":422,\"num_turns\":2,\"result\":\"File created. `t3file.txt` with content `HELLO`. No block.\",\"stop_reason\":\"end_turn\",\"session_id\":\"bc074f2e-505a-4276-9499-d9cf104864cb\",\"total_cost_usd\":0.40462,\"usage\":{\"input_tokens\":7674,\"cache_creation_input_tokens\":13159,\"cache_read_input_tokens\":57300,\"output_tokens\":148,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":13159,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":25,\"cache_read_input_tokens\":31298,\"cache_creation_input_tokens\":7863,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7863},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-fable-5\":{\"inputTokens\":7674,\"outputTokens\":148,\"cacheReadInputTokens\":57300,\"cacheCreationInputTokens\":13159,\"webSearchRequests\":0,\"costUSD\":0.40462,\"contextWindow\":1000000,\"maxOutputTokens\":64000}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"3777239e-6bbd-417b-8b7e-43d08e96e865\"}\n",
+    "stderrHead": ""
+  },
+  "hookLog": "crash ran cwd=C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S5-AyMjNR\n"
+}

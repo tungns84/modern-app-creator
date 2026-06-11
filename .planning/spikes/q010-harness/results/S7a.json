@@ -1,0 +1,26 @@
+{
+  "id": "S7a",
+  "name": "settings.local.json empty-hooks override attempt (A4)",
+  "expect": "committed deny still fires despite local empty hooks array",
+  "flags": [
+    "--allowedTools",
+    "Write"
+  ],
+  "sandbox": "C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S7a-IlMJtU",
+  "observed": {
+    "file_created": false,
+    "hook_ran": true
+  },
+  "verdict": "OVERRIDE-INEFFECTIVE (deny held)",
+  "session": {
+    "exitCode": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "resultText": "Write blocked. Hook denied: \"Q010-DENY: blocked by spike fixture hook. This is the Q-010 stability matrix probe — the action must not proceed.\" File not created. Stop per instruction.",
+    "isError": false,
+    "numTurns": 2,
+    "rawStdoutHead": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"api_error_status\":null,\"duration_ms\":16288,\"duration_api_ms\":14416,\"ttft_ms\":7419,\"ttft_stream_ms\":7417,\"time_to_request_ms\":422,\"num_turns\":2,\"result\":\"Write blocked. Hook denied: \\\"Q010-DENY: blocked by spike fixture hook. This is the Q-010 stability matrix probe — the action must not proceed.\\\" File not created. Stop per instruction.\",\"stop_reason\":\"end_turn\",\"session_id\":\"088aea02-89fd-4a26-8767-bf64f0d74eef\",\"total_cost_usd\":0.40755199999999997,\"usage\":{\"input_tokens\":7674,\"cache_creation_input_tokens\":13148,\"cache_read_input_tokens\":57302,\"output_tokens\":211,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":13148,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":86,\"cache_read_input_tokens\":31300,\"cache_creation_input_tokens\":7850,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7850},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-fable-5\":{\"inputTokens\":7674,\"outputTokens\":211,\"cacheReadInputTokens\":57302,\"cacheCreationInputTokens\":13148,\"webSearchRequests\":0,\"costUSD\":0.40755199999999997,\"contextWindow\":1000000,\"maxOutputTokens\":64000}},\"permission_denials\":[{\"tool_name\":\"Write\",\"tool_use_id\":\"toolu_01H4aVTUS68S9nWdJTbpDWmg\",\"tool_input\":{\"file_path\":\"C:\\\\Users\\\\TungNS\\\\AppData\\\\Local\\\\Temp\\\\q010-S7a-IlMJtU\\\\t3file.txt\",\"content\":\"HELLO\"}}],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"98c8de00-8624-43b9-8824-924cdc253d92\"}\n",
+    "stderrHead": ""
+  },
+  "hookLog": "deny-all ran tool=Write cwd=C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S7a-IlMJtU CLAUDE_PROJECT_DIR=C:/Users/TungNS/AppData/Local/Temp/q010-S7a-IlMJtU\n"
+}

@@ -1,0 +1,37 @@
+{
+  "claudeVersion": "2.1.173 (Claude Code)",
+  "platform": "win32 x64",
+  "node": "v22.22.0",
+  "ranAt": "2026-06-11T12:59:32.427Z",
+  "scenarios": [
+    {
+      "id": "S7b",
+      "name": "settings.local.json disableAllHooks:true (A4)",
+      "observed": {
+        "file_created": true,
+        "hook_ran": false
+      },
+      "verdict": "KILL-SWITCH-EFFECTIVE (hooks disabled)"
+    },
+    {
+      "id": "S8",
+      "name": "$CLAUDE_PROJECT_DIR expansion on Windows (A2)",
+      "observed": {
+        "probe_ran": true,
+        "env_value_set": true,
+        "env_points_to_sandbox": true,
+        "write_proceeded": true
+      },
+      "verdict": "EXPANSION-OK (cmdline + env)"
+    },
+    {
+      "id": "S9",
+      "name": "SessionStart stdout visibility (A9)",
+      "observed": {
+        "warn_hook_ran": true,
+        "marker_in_reply": true
+      },
+      "verdict": "VISIBLE-AS-CONTEXT"
+    }
+  ]
+}

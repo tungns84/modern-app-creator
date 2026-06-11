@@ -1,0 +1,26 @@
+{
+  "id": "S3",
+  "name": "Bash T4 deny",
+  "expect": "deny JSON blocks the Bash command; marker absent",
+  "flags": [
+    "--allowedTools",
+    "Bash"
+  ],
+  "sandbox": "C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S3-DgFw8D",
+  "observed": {
+    "file_created": false,
+    "hook_ran": true
+  },
+  "verdict": "DENY-HELD",
+  "session": {
+    "exitCode": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "resultText": "Blocked. Reason quoted exact:\n\n`Q010-DENY: blocked by spike fixture hook. This is the Q-010 stability matrix probe — the action must not proceed.`\n\nHook denied call. No file written. Stopped as instructed.",
+    "isError": false,
+    "numTurns": 2,
+    "rawStdoutHead": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"api_error_status\":null,\"duration_ms\":16713,\"duration_api_ms\":15076,\"ttft_ms\":8838,\"ttft_stream_ms\":8834,\"time_to_request_ms\":420,\"num_turns\":2,\"result\":\"Blocked. Reason quoted exact:\\n\\n`Q010-DENY: blocked by spike fixture hook. This is the Q-010 stability matrix probe — the action must not proceed.`\\n\\nHook denied call. No file written. Stopped as instructed.\",\"stop_reason\":\"end_turn\",\"session_id\":\"f9dfd268-9443-447e-9abe-c609e406cbea\",\"total_cost_usd\":0.161229,\"usage\":{\"input_tokens\":7674,\"cache_creation_input_tokens\":8074,\"cache_read_input_tokens\":62588,\"output_tokens\":433,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":8074,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":84,\"cache_read_input_tokens\":31294,\"cache_creation_input_tokens\":8074,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":8074},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-8\":{\"inputTokens\":7674,\"outputTokens\":433,\"cacheReadInputTokens\":62588,\"cacheCreationInputTokens\":8074,\"webSearchRequests\":0,\"costUSD\":0.161229,\"contextWindow\":1000000,\"maxOutputTokens\":64000}},\"permission_denials\":[{\"tool_name\":\"Bash\",\"tool_use_id\":\"toolu_0143YVRhVAmimhSsnLaw73u7\",\"tool_input\":{\"command\":\"echo pwned > t4-marker.txt\",\"description\":\"Write marker file\"}}],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"uuid\":\"a378da58-3d92-4a37-ac85-e8da96bd525a\"}\n",
+    "stderrHead": ""
+  },
+  "hookLog": "deny-all ran tool=Bash cwd=C:\\Users\\TungNS\\AppData\\Local\\Temp\\q010-S3-DgFw8D CLAUDE_PROJECT_DIR=C:/Users/TungNS/AppData/Local/Temp/q010-S3-DgFw8D\n"
+}

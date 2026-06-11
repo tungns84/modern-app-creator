@@ -41,10 +41,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Bootstrap: .gitattributes, tiers/waivers config, constitution copy, PR template (wave 1)
-- [ ] 01-02-PLAN.md — Spikes Q-002 (GitHub PR-review mechanism) + Q-004 (verify-fast contract) (wave 1)
-- [ ] 01-03-PLAN.md — Spikes Q-010 (hook stability matrix) + JDK 25 toolchain smoke 3-OS (wave 1)
-- [ ] 01-12-PLAN.md — Manual dogfood: hand-written spec units 001-006 (wave 1)
+- [x] 01-01-PLAN.md — Bootstrap: .gitattributes, tiers/waivers config, constitution copy, PR template (wave 1)
+- [x] 01-02-PLAN.md — Spikes Q-002 (GitHub PR-review mechanism) + Q-004 (verify-fast contract) (wave 1)
+- [x] 01-03-PLAN.md — Spikes Q-010 (hook stability matrix) + JDK 25 toolchain smoke 3-OS (wave 1)
+- [x] 01-12-PLAN.md — Manual dogfood: hand-written spec units 001-006 (wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dogfood Bootstrap & Enforcement | 0/12 | Not started | - |
+| 1. Dogfood Bootstrap & Enforcement | 4/12 | In Progress|  |
 | 2. Backend Foundation | 0/TBD | Not started | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |

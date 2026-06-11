@@ -1,0 +1,12 @@
+# Claude Code personal/dev settings (preset settings.json IS committed)
+.claude/settings.local.json
+
+# Dependencies
+node_modules/
+
+# Task runner cache
+.task/
+
+# OS noise
+Thumbs.db
+.DS_Store

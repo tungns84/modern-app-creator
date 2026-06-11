@@ -1,0 +1,17 @@
+{
+  "waivers": [
+    {
+      "id": "W-001",
+      "scope": "self-approval",
+      "reason": "solo developer — second reviewer does not exist yet",
+      "approvedBy": "tungns84",
+      "created": "2026-06-11",
+      "expires": "2026-09-30",
+      "platformDeferred": [
+        "require_code_owner_review",
+        "required_approving_review_count>=1"
+      ],
+      "note": "While W-001 is active, the GitHub ruleset settings listed in platformDeferred stay OFF so the sole CODEOWNER (= PR author) is not deadlocked; the plan-compliance gate applies the waiver-aware approval logic instead. On W-001 expiry or when a second person joins, require_code_owner_review and required_approving_review_count>=1 MUST be enabled on the ruleset."
+    }
+  ]
+}

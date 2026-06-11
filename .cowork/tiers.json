@@ -1,0 +1,52 @@
+{
+  "claudeCode": {
+    "testedVersion": ""
+  },
+  "meta": {
+    "exclude": [
+      ".planning/**",
+      "product/**",
+      "requirements/**",
+      ".code-review-graph/**",
+      "CLAUDE.md"
+    ]
+  },
+  "t3": {
+    "paths": [
+      "pom.xml",
+      "**/pom.xml",
+      "package.json",
+      "**/package.json",
+      "backend/src/main/java/**/security/**",
+      "backend/src/main/java/**/tenancy/**",
+      "backend/src/main/java/**/package-info.java",
+      ".github/**",
+      ".cowork/**",
+      ".claude/settings.json",
+      ".claude/hooks/**",
+      "backend/CLAUDE.md",
+      "frontend/CLAUDE.md",
+      "templates/claude/**",
+      "docs/adr/**",
+      "docs/methodology/**",
+      "scripts/checks/**",
+      "Taskfile.yml",
+      "infra/compose.yaml"
+    ]
+  },
+  "t4": {
+    "commandPatterns": [
+      "git push --force",
+      "git push -f",
+      "kubectl apply",
+      "kubectl delete",
+      "flyway clean",
+      "docker volume rm",
+      "gh secret set",
+      "git reset --hard origin"
+    ]
+  },
+  "strict": {
+    "t2Paths": []
+  }
+}

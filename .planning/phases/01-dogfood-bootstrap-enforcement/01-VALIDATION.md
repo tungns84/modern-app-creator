@@ -42,13 +42,13 @@ updated: 2026-06-11
 | 01-01-T1 | 01 | 1 | AGENT-05 | T-01-01/02 | tiers+waivers parse (incl. platformDeferred), T3 self-listing | assertion | inline `node -e` shape check + `git check-attr` | ❌ created by task | ⬜ pending |
 | 01-01-T2 | 01 | 1 | AGENT-05 | — | verbatim constitution copy | assertion | `git diff --no-index` product↔docs | ❌ created by task | ⬜ pending |
 | 01-12-T1 | 12 | 1 | AGENT-06, AGENT-09 | T-01-03 | specs 001-003 approved, no .planning links | assertion | inline `node -e` over specs/00[1-3] | ❌ created by task | ⬜ pending |
-| 01-12-T2 | 12 | 1 | AGENT-06, AGENT-09 | T-01-03 | all 6 approved specs, no .planning links | assertion | inline `node -e` over specs/00[1-6] | ❌ created by task | ⬜ pending |
+| 01-12-T2 | 12 | 1 | AGENT-06, AGENT-09 | T-01-03 | all 6 approved specs, no .planning links (tasks.md optional per AI-COWORK §4) | assertion | inline `node -e` over specs/00[1-6] | ❌ created by task | ⬜ pending |
 | 01-02-T1 | 02 | 1 | GATE-10 | T-01-04/05 | A5/A6/A10 resolved empirically | spike report assertion | inline `node -e` key-presence | ❌ created by task | ⬜ pending |
 | 01-02-T2 | 02 | 1 | AGENT-08 (seed) | — | fast/full gate-set contract | spike report assertion | inline `node -e` key-presence | ❌ created by task | ⬜ pending |
 | 01-03-T1 | 03 | 1 | AGENT-03 | T-01-07/08 | A1–A4/A9 observed; fail-mode known | spike harness + report | inline `node -e` key-presence | ❌ created by task | ⬜ pending |
 | 01-03-T2 | 03 | 1 | (criterion 5) | T-01-09 | toolchain proven on Temurin 25 CI | CI matrix run | inline `node -e` + run URL | ❌ created by task | ⬜ pending |
-| 01-04-T1 (RED) | 04 | 2 | AGENT-03 | T-01-10/12 | deny contract incl. crash fail-closed | unit (node:test) | `node --test .claude/hooks/tests/` (must FAIL — RED gate matches `fail [1-9]`, never `fail 0`) | ❌ Wave-0-equivalent: created RED-first | ⬜ pending |
-| 01-04-T2 (GREEN) | 04 | 2 | AGENT-03 | T-01-10/11/12 | hooks green on full fixture matrix | unit (node:test) | `node --test .claude/hooks/tests/` | ❌ created by task | ⬜ pending |
+| 01-04-T1 (RED) | 04 | 2 | AGENT-03 | T-01-10/12/36 | branch-bound deny contract (10 cases) incl. crash fail-closed + anti-rot (unrelated approved spec never passes) | unit (node:test) | `node --test .claude/hooks/tests/` (must FAIL — RED gate matches `fail [1-9]`, never `fail 0`) | ❌ Wave-0-equivalent: created RED-first | ⬜ pending |
+| 01-04-T2 (GREEN) | 04 | 2 | AGENT-03 | T-01-10/11/12/36 | hooks green on full 10-case fixture matrix; binding helpers live only in lib/tiers.mjs (D-22) | unit (node:test) | `node --test .claude/hooks/tests/` | ❌ created by task | ⬜ pending |
 | 01-04-T3 | 04 | 2 | AGENT-04 | T-01-13 | allowlist + hooks live (D-08) | assertion + suite | inline `node -e` settings check + suite | ❌ created by task | ⬜ pending |
 | 01-05-T1 | 05 | 2 | FOUND-02 | T-01-14/15 | pinned images, 6 healthchecks | config validation | `docker compose config -q` + `node -e` | ❌ created by task | ⬜ pending |
 | 01-05-T2 | 05 | 2 | FOUND-02 | T-01-16 | task up all-healthy on Windows; macOS row BLOCKING-noted | integration (local) | `task --list` + report assertion | ❌ created by task | ⬜ pending |
@@ -60,15 +60,15 @@ updated: 2026-06-11
 | 01-07-T2 (GREEN) | 07 | 2 | GATE-12 | T-01-20/21 | render+check green | unit (node:test) | `node --test scripts/checks/tests/claude-md.test.mjs` | ❌ created by task | ⬜ pending |
 | 01-08-T1 | 08 | 2 | FOUND-02 (ADR) | — | license rationale inline | assertion | inline `node -e` key-presence | ❌ created by task | ⬜ pending |
 | 01-08-T2 | 08 | 2 | AGENT-05 (ADR) | T-01-22/23/24 | mechanisms locked, no meta links | assertion | inline `node -e` key-presence | ❌ created by task | ⬜ pending |
-| 01-09-T1 (RED) | 09 | 3 | GATE-10 | T-01-25..28 | 11-case verdict matrix | unit (node:test) | `node --test scripts/checks/tests/plan-compliance.test.mjs` (must FAIL — RED gate matches `fail [1-9]`) | ❌ created RED-first | ⬜ pending |
-| 01-09-T2 (GREEN) | 09 | 3 | GATE-10 | T-01-25..28 | verdict core green, shared matcher | unit (node:test) | `node --test scripts/checks/tests/plan-compliance.test.mjs` | ❌ created by task | ⬜ pending |
-| 01-09-T3 | 09 | 3 | GATE-10, AGENT-09 | T-01-29/30 | dual triggers, merge-commit only, no-deadlock ruleset (W-001 platform deferral; required checks = existing workflows only) | CI + platform read-back | `gh api repos/... --jq` merge flags + run URL + mergeable test PR | ❌ created by task | ⬜ pending |
+| 01-09-T1 (RED) | 09 | 3 | GATE-10 | T-01-25..28/36 | 14-case verdict matrix incl. PR↔spec binding (branch feat/NNN-* / plan.md-in-diff), anti-rot (unrelated specs FAIL), waiver-never-bypasses-binding | unit (node:test) | `node --test scripts/checks/tests/plan-compliance.test.mjs` (must FAIL — RED gate matches `fail [1-9]`) | ❌ created RED-first | ⬜ pending |
+| 01-09-T2 (GREEN) | 09 | 3 | GATE-10 | T-01-25..28/36 | verdict core green, shared matcher + shared binding helpers (D-22) | unit (node:test) | `node --test scripts/checks/tests/plan-compliance.test.mjs` | ❌ created by task | ⬜ pending |
+| 01-09-T3 | 09 | 3 | GATE-10, AGENT-09 | T-01-29/30/36 | dual triggers + --branch wiring, merge-commit only, no-deadlock ruleset (W-001 platform deferral; required checks = existing workflows only) | CI + platform read-back | `gh api repos/... --jq` merge flags + TWO test-PR run URLs (unbound branch → FAIL, feat/002-bound → PASS + mergeable) | ❌ created by task | ⬜ pending |
 | 01-10-T1 | 10 | 4 | AGENT-01 | T-01-32 | template renders ≤200, smoke non-vacuous | check CLI | `node scripts/checks/claude-md-check.mjs --root-template ...` | ❌ created by task | ⬜ pending |
 | 01-10-T2 | 10 | 4 | AGENT-01 | T-01-31 | tree files ≤150, hallucination warnings | check CLI | `node scripts/checks/claude-md-check.mjs --tree-file ...` | ❌ created by task | ⬜ pending |
 | 01-10-T3 | 10 | 4 | GATE-12 | T-01-31 | gate blocking in CI (required only after first green run) | integration (CI) | `gh run list --workflow=claude-md-check.yml` | ❌ created by task | ⬜ pending |
-| 01-11-T1 | 11 | 5 | AGENT-02 | T-01-33 | plan/verify skills full | assertion | inline `node -e` content check | ❌ created by task | ⬜ pending |
+| 01-11-T1 | 11 | 5 | AGENT-02 | T-01-33 | plan/verify skills full (plan skill names feat/NNN-* binding convention) | assertion | inline `node -e` content check | ❌ created by task | ⬜ pending |
 | 01-11-T2 | 11 | 5 | AGENT-02 | T-01-33 | skeletons + skills-lint | check CLI | `node scripts/checks/skills-lint.mjs` | ❌ created by task | ⬜ pending |
-| 01-11-T3 | 11 | 5 | AGENT-04, AGENT-08 seed | T-01-34/35 | lockstep + meta lint + verify spine | unit + integration | `node --test scripts/checks/tests/lints.test.mjs` + `task verify` | ❌ created by task | ⬜ pending |
+| 01-11-T3 | 11 | 5 | AGENT-04, AGENT-08 seed | T-01-34/35 | lockstep + meta lint + verify spine + `task --dry verify` smoke-manifest entry | unit + integration | `node --test scripts/checks/tests/lints.test.mjs` + manifest `node -e` check + `task verify` | ❌ created by task | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -78,8 +78,8 @@ updated: 2026-06-11
 
 No separate Wave 0: this phase BUILDS the test infrastructure. All `MISSING` harnesses are created RED-first inside their owning TDD plans (Nyquist satisfied by construction):
 
-- [x] Hook test harness → plan 01-04 Task 1 (RED) — AGENT-03
-- [x] CI gate fixtures (PR files/reviews JSON, plan.md with/without Approved-by) → plan 01-09 Task 1 (RED) — GATE-10
+- [x] Hook test harness (incl. git-branch sandbox for binding cases) → plan 01-04 Task 1 (RED) — AGENT-03
+- [x] CI gate fixtures (PR files/reviews JSON, branch values, bound/unbound/unrelated-spec trees, plan.md with/without Approved-by) → plan 01-09 Task 1 (RED) — GATE-10
 - [x] `task up` healthcheck smoke → plan 01-05 (compose config + CI ubuntu job) — FOUND-02
 - [x] init rename fixture tests → plan 01-06 Task 1 (RED) — FOUND-12
 - [x] claude-md check fixtures → plan 01-07 Task 1 (RED) — GATE-12
@@ -91,7 +91,7 @@ No separate Wave 0: this phase BUILDS the test infrastructure. All `MISSING` har
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| Live interactive deny UX (message + next step in session) | AGENT-03 | Requires live Claude Code session on pinned version | Fresh session → attempt Write on T3 path → observe deny message naming artifact + next step (plans 01-03/01-04 human-checks) |
+| Live interactive deny UX (message + next step in session) | AGENT-03 | Requires live Claude Code session on pinned version | Fresh session → attempt Write on T3 path from an UNBOUND branch (e.g., main), then from a feat/NNN-* branch whose bound spec does not exist → observe deny message naming the BOUND artifact + next step both times (plans 01-03/01-04 human-checks; binding makes this pass-able by design even with specs 001-006 merged) |
 | macOS `task up` one-time verification | FOUND-02 (D-04) | No macOS hardware in this environment | BLOCKING before `/gsd-verify-work`: run `task up` on a Mac and record runtime + health results into .planning/spikes/local-stack-verification.md, OR add an explicit time-boxed waiver entry (scope: macos-task-up-verification) to .cowork/waivers.json. An unresolved PENDING row blocks phase verification |
 | Spec approval integrity (6 Approved-by lines) | AGENT-06/09 | Human H2 act by definition | Developer confirms the six approvals reflect real review (plan 01-12 human-check) |
 | ADR 0002/0003 ratification (Status → Accepted) | AUTHZ-03/GATE-11 consumers | Architecture decision authority is human | Review both mechanism ADRs; amend or ratify (plan 01-08 human-check) |
@@ -108,4 +108,4 @@ No separate Wave 0: this phase BUILDS the test infrastructure. All `MISSING` har
 - [x] Feedback latency < 60s
 - [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** planner 2026-06-11 (revised 2026-06-11 per checker feedback: 01-01 split → 01-12; waves recomputed to 5; RED gates hardened; D-10 platform deferral; D-04 deadline bound)
+**Approval:** planner 2026-06-11 (revised 2026-06-11 per checker feedback: 01-01 split → 01-12; waves recomputed to 5; RED gates hardened; D-10 platform deferral; D-04 deadline bound. Revised again 2026-06-11, iteration 2: GATE-10/T3-hook presence-only check replaced with PR↔spec binding via feat/NNN-* branch + plan.md-in-diff fallback (anti-rot cases added → 01-09 = 14 cases, 01-04 = 10 cases, T-01-36); depends_on fixed: 01-09 += 01-05, 01-11 += 01-02 — waves unchanged; `task --dry verify` added to smoke manifest in 01-11-T3; tasks.md-optional note added to 01-12)

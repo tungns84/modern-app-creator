@@ -72,7 +72,7 @@ A new project generated from this preset is **architecture-safe by machine**: ze
 
 ## Constraints
 
-- **Tech stack (locked, with user override)**: **JDK 26** (user override 2026-06-11 — replaces PRD's Java 21), Spring Boot 4, Spring Modulith 2.0, PostgreSQL 16 (no H2), React 19, Tailwind 4, shadcn/ui, Flowable 8 (BPM) — anti-stack locked per PRD §5.2/§10.2
+- **Tech stack (locked, with user override)**: **JDK 25 LTS** (user decision 2026-06-11 — supersedes both PRD's Java 21 and the earlier JDK 26 override, after research showed JDK 26 is non-LTS with a Sept 2026 update cliff and toolchain breakage), Spring Boot 4, Spring Modulith 2.0, PostgreSQL 16 (no H2), React 19, Tailwind 4, shadcn/ui, Flowable 8 (BPM) — anti-stack locked per PRD §5.2/§10.2
 - **Runtime**: Claude Code is the only supported AI runtime — plan mode + PreToolUse hooks are load-bearing for enforcement
 - **Platform**: dev on Win/macOS/Linux without WSL; CI matrix must cover all 3
 - **Language**: PRD/product docs Vietnamese; technical specs/code English
@@ -86,7 +86,10 @@ A new project generated from this preset is **architecture-safe by machine**: ze
 | Milestone scope = Giai đoạn 1 only (preset repo); CLI = next milestone | PRD §15: preset must be green before investing in the engine; template-first | — Pending |
 | BPM bậc 1 INCLUDED in this milestone (option ON) | User decision 2026-06-11; spike Q-006 must pass before Group C phases commit | — Pending |
 | Design workflow FR-E09 deferred | Blocked on Q-003/Q-008; degrades gracefully | — Pending |
-| **JDK 26 instead of Java 21** | User override 2026-06-11; supersedes PRD §10.2 constraint | — Pending |
+| **JDK 25 LTS instead of Java 21** | User decision 2026-06-11 (initially JDK 26, reversed after research: 26 is non-LTS, EOL ~Sept 2026, Lombok/toolchain breakage on class file v70) | — Pending |
+| Data scopes enforced in v1 = `own/tenant/all`; `team/department` schema-ready seam only | PRD defines no team/department entities — unenforceable/untestable in v1; matches tenancy-seam philosophy | — Pending |
+| Added: dev seed data + BPM task email notification | Research P1 gaps — onboarding pilot/E2E depend on seed data; task notify is universal inbox expectation | — Pending |
+| No user impersonation; no `cowork update` path in v1 | Explicit decisions (not silent omissions) per research — documented in preset docs | — Pending |
 | H2-T3 plan approval = HARD, 2 layers (hook in-session + CI at-merge) | Prose-only rules get bypassed; CI is the runtime-agnostic floor | — Pending |
 | CLAUDE.md 3 layers (root/backend/frontend), no per-module files | Matches Claude Code lazy-load mechanics; per-module rots | — Pending |
 | AuthZ = permission+scope, authority seam claim→store | Scales with API growth; no filter-chain rewrite on upgrade | — Pending |

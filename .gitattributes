@@ -9,3 +9,6 @@
 *.png binary
 *.svg binary
 *.jar binary
+
+# Test fixture with deliberate CRLF bytes — must never be EOL-normalized
+scripts/checks/tests/fixtures/crlf.md -text

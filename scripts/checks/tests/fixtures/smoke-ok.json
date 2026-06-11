@@ -1,0 +1,6 @@
+{
+  "commands": [
+    { "cmd": "node --version", "legs": ["ubuntu", "windows", "macos"] },
+    { "cmd": "git --version", "legs": ["ubuntu", "windows", "macos"] }
+  ]
+}

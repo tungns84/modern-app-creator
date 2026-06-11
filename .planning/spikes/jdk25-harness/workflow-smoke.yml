@@ -1,0 +1,33 @@
+# Pushed to the throwaway repo as .github/workflows/smoke.yml
+# Threat model T-01-09: only official actions/* actions, pinned by major version.
+name: jdk25-toolchain-smoke
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Print resolved Java version
+        run: java -version
+        shell: bash
+      - name: Build, test, coverage (Maven Wrapper 3.9.16)
+        run: ./mvnw -B -ntp verify
+        shell: bash
+      - name: Assert JaCoCo report produced
+        run: test -f target/site/jacoco/index.html
+        shell: bash

@@ -88,10 +88,10 @@
 - [ ] **AGENT-03**: PreToolUse hooks deny Write/Edit on T3 paths without approved plan (explaining message + next step) and deny T4 command patterns; `strict` mode extends gate to T2; hook stability matrix per pinned Claude Code version confirmed by spike Q-010 (FR-E03)
 - [ ] **AGENT-04**: T1 allowlist pre-approves daily commands (`task *`, `./mvnw verify`, `npm run *`) — zero ceremony (FR-E04)
 - [ ] **AGENT-05**: S→P→I→V workflow operative with H1 (intent), H2 (plan approval — HARD for T3 via hook+CI), H3 (diff review — branch protection + CODEOWNERS for security/tenancy); tiers T1–T4 documented and enforced (FR-E05)
-- [ ] **AGENT-06**: Spec artifacts `specs/NNN-feature/{spec,plan,tasks}.md`; branch named after spec; commits cite REQ-IDs; same-PR spec reconciliation rule (FR-E06)
+- [x] **AGENT-06**: Spec artifacts `specs/NNN-feature/{spec,plan,tasks}.md`; branch named after spec; commits cite REQ-IDs; same-PR spec reconciliation rule (FR-E06)
 - [ ] **AGENT-07**: `ONBOARDING.md` (day-one path) + `specs/000-example/` walked through full S→P→I→V in commit history with per-artifact annotations (FR-E07)
 - [ ] **AGENT-08**: Harness quality: gate errors name rule + fix (agent self-corrects ≤2 rounds); resume convention; `verify --fast` <60s separate from `verify --full` — feasibility + gate-set defined by spike Q-004 (FR-E08)
-- [ ] **AGENT-09**: Dogfood from start: this preset repo itself is built via S→P→I→V with hooks active; commit history is the evidence (PRD §13.1, DoD)
+- [x] **AGENT-09**: Dogfood from start: this preset repo itself is built via S→P→I→V with hooks active; commit history is the evidence (PRD §13.1, DoD)
 
 ## v2 Requirements (deferred)
 
@@ -179,12 +179,13 @@ Mapped by roadmap 2026-06-11. Coverage: 64/64 v1 requirements → 8 phases (ever
 | AGENT-03 | Phase 1 | Pending |
 | AGENT-04 | Phase 1 | Pending |
 | AGENT-05 | Phase 1 | Pending |
-| AGENT-06 | Phase 1 | Pending |
+| AGENT-06 | Phase 1 | Complete |
 | AGENT-07 | Phase 8 | Pending |
 | AGENT-08 | Phase 2 | Pending |
-| AGENT-09 | Phase 1 | Pending |
+| AGENT-09 | Phase 1 | Complete |
 
 **Cross-phase notes (requirement owned by one phase, touched by another):**
+
 - FOUND-01: module set completes (13th `bpm` module) in Phase 7; dynamic count assertion lands in Phase 2
 - FOUND-07: Web Vitals (frontend piece) finalizes with the deployed FE in Phase 6; backend observability is Phase 2
 - FOUND-13: sample BPM process added to seed data in Phase 7; core seed data is Phase 5

@@ -33,10 +33,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Developer can run `task up` on Windows/macOS/Linux without WSL and get the full local stack (PostgreSQL 16, Redis, Mailpit, MinIO, Keycloak, observability)
   4. Tech Lead can run `scripts/init.(sh|ps1)` to rename `com.acme.app` to team values with auto-commit; three-layer CLAUDE.md and the five skills exist within size budgets
   5. Spike reports (Q-010 hook matrix, Q-002 hosting API, Q-004 verify-fast gate-set, JDK 25 toolchain smoke on 3 OS) and required ADRs (permission sync FR-B11, undeclared-permission detection FR-B13, Redis-vs-Valkey) are written before dependent phases commit
-**Plans**: 11 plans in 3 waves
+**Plans**: 12 plans in 5 waves
 
 Plans:
-- [ ] 01-01-PLAN.md — Bootstrap: .gitattributes, tiers/waivers config, specs 001-006, constitution copy, PR template (wave 1)
+- [ ] 01-01-PLAN.md — Bootstrap: .gitattributes, tiers/waivers config, constitution copy, PR template (wave 1)
 - [ ] 01-02-PLAN.md — Spikes Q-002 (GitHub PR-review mechanism) + Q-004 (verify-fast contract) (wave 1)
 - [ ] 01-03-PLAN.md — Spikes Q-010 (hook stability matrix) + JDK 25 toolchain smoke 3-OS (wave 1)
 - [ ] 01-04-PLAN.md — TDD: tier matcher + T3/T4 hooks + settings.json go-live (wave 2)
@@ -44,9 +44,10 @@ Plans:
 - [ ] 01-06-PLAN.md — TDD: init rename engine + sh/ps1 entry points + parity CI (wave 2)
 - [ ] 01-07-PLAN.md — TDD: CLAUDE.md render + size/smoke check tooling (wave 2)
 - [ ] 01-08-PLAN.md — ADRs 0001 Valkey, 0002 permission sync (FR-B11), 0003 undeclared-permission detection (FR-B13) (wave 2)
-- [ ] 01-09-PLAN.md — TDD: plan-compliance gate + workflow + CODEOWNERS + platform config (wave 3)
-- [ ] 01-10-PLAN.md — Three-layer CLAUDE.md content + claude-md-check CI (wave 3)
-- [ ] 01-11-PLAN.md — Five skills + lint trio + task verify/verify:fast spine (wave 3)
+- [ ] 01-09-PLAN.md — TDD: plan-compliance gate + workflow + CODEOWNERS + platform config incl. D-10 W-001 deferral (wave 3)
+- [ ] 01-10-PLAN.md — Three-layer CLAUDE.md content + claude-md-check CI (wave 4)
+- [ ] 01-11-PLAN.md — Five skills + lint trio + task verify/verify:fast spine (wave 5)
+- [ ] 01-12-PLAN.md — Manual dogfood: hand-written spec units 001-006 (wave 1)
 
 ### Phase 2: Backend Foundation
 **Goal**: A green Spring Modulith skeleton with infra modules where architecture violations fail the build and cross-module events cannot be lost — built via the `new-module` skill as the first real dogfood

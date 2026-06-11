@@ -562,7 +562,7 @@ if (!actual.startsWith(pinned)) {
 | A9 | SessionStart hook stdout reaches the session as context (warn mechanism) | Code Ex. 5 | Use a different SessionStart output field; Q-010 verifies |
 | A10 | GitHub natively prevents PR authors approving own PRs (so waiver covers "zero non-author approvals" case) | Pattern 3 step 8 | Gate logic unchanged either way (it checks login != author itself) |
 
-## Open Questions
+## Open Questions (RESOLVED — addressed by spike plans 01-02/01-03 per D-20)
 
 1. **Q-010 — hook stability matrix on the pinned version (2.1.173 or newer at spike time)**
    - What we know: config schema, stdin/stdout contracts, deny JSON (verified); public issues show version-specific deny failures and Windows shell quirks.

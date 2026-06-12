@@ -266,3 +266,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   console.log(`plan-compliance verdict: ${result.verdict}`);
   process.exit(result.verdict === "PASS" ? 0 : 1);
 }
+"// gate-probe (a): unbound T3 change - expect FAIL" 

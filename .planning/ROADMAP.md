@@ -13,7 +13,7 @@ Build the preset as a real, buildable monorepo — enforcement first, then botto
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Dogfood Bootstrap & Enforcement** - Spikes + ADRs, hooks, specs convention, L2 plan-compliance CI, local stack, init script — before any application code
+- [x] **Phase 1: Dogfood Bootstrap & Enforcement** - Spikes + ADRs, hooks, specs convention, L2 plan-compliance CI, local stack, init script — before any application code (completed 2026-06-12)
 - [ ] **Phase 2: Backend Foundation** - Modulith skeleton + infra modules with Modulith/ArchUnit gates live and loss-proof event registry
 - [ ] **Phase 3: Tenancy & Security Seams** - TenantContext/filter + isolation gate, JWT/multi-IdP, permission model + declaration gate — before any feature endpoint
 - [ ] **Phase 4: Contract Pipeline & Frontend Foundation** - RFC 9457 + OpenAPI→Orval drift gate, React 19 shell, all frontend gates live
@@ -64,7 +64,7 @@ Plans:
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 01-11-PLAN.md — Five skills + lint trio + task verify/verify:fast spine (wave 5)
+- [x] 01-11-PLAN.md — Five skills + lint trio + task verify/verify:fast spine (wave 5)
 
 ### Phase 2: Backend Foundation
 
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dogfood Bootstrap & Enforcement | 11/12 | In Progress|  |
+| 1. Dogfood Bootstrap & Enforcement | 12/12 | Complete   | 2026-06-12 |
 | 2. Backend Foundation | 0/TBD | Not started | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |

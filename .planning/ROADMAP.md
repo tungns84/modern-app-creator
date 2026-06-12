@@ -48,11 +48,11 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-04-PLAN.md — TDD: tier matcher + T3/T4 hooks + settings.json go-live (wave 2)
-- [ ] 01-05-PLAN.md — Local stack: compose 6 services + Taskfile up/down + os-matrix CI (wave 2)
-- [ ] 01-06-PLAN.md — TDD: init rename engine + sh/ps1 entry points + parity CI (wave 2)
-- [ ] 01-07-PLAN.md — TDD: CLAUDE.md render + size/smoke check tooling (wave 2)
-- [ ] 01-08-PLAN.md — ADRs 0001 Valkey, 0002 permission sync (FR-B11), 0003 undeclared-permission detection (FR-B13) (wave 2)
+- [x] 01-04-PLAN.md — TDD: tier matcher + T3/T4 hooks + settings.json go-live (wave 2)
+- [x] 01-05-PLAN.md — Local stack: compose 6 services + Taskfile up/down + os-matrix CI (wave 2)
+- [x] 01-06-PLAN.md — TDD: init rename engine + sh/ps1 entry points + parity CI (wave 2)
+- [x] 01-07-PLAN.md — TDD: CLAUDE.md render + size/smoke check tooling (wave 2)
+- [x] 01-08-PLAN.md — ADRs 0001 Valkey, 0002 permission sync (FR-B11), 0003 undeclared-permission detection (FR-B13) (wave 2)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dogfood Bootstrap & Enforcement | 4/12 | In Progress|  |
+| 1. Dogfood Bootstrap & Enforcement | 9/12 | In Progress|  |
 | 2. Backend Foundation | 0/TBD | Not started | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |

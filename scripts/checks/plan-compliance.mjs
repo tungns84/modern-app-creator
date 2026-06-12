@@ -266,3 +266,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   console.log(`plan-compliance verdict: ${result.verdict}`);
   process.exit(result.verdict === "PASS" ? 0 : 1);
 }
+
+// gate-probe (b): T3 change bound to specs/002 - expect PASS + W-001 warning

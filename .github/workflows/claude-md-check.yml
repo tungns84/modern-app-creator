@@ -1,0 +1,69 @@
+# claude-md-check — GATE-12 CI wiring (D-14 render-then-check, plan 01-10).
+#
+# The preset root CLAUDE.md never exists as a maintained static file (D-13):
+# this workflow renders templates/claude/ROOT-CLAUDE.template.md with sample
+# values and asserts the rendered output stays <=200 lines; backend/ and
+# frontend/ CLAUDE.md are checked in place at <=150 lines each (D-15); the
+# command smoke runs every command declared in smoke-commands.json for the
+# ubuntu leg and goes RED on zero declared commands (Pitfall 9 vacuous-green
+# guard, enforced inside scripts/checks/claude-md-check.mjs).
+#
+# The job id `claude-md-check` IS the required-status-check context name.
+# Ruleset wiring order (Pitfall 4): this check is added to the GATE-10
+# ruleset's required checks only AFTER its first green run on GitHub — never
+# require a check that has not reported yet.
+#
+# Security (V14): only official `actions/*` actions, pinned by major.
+name: claude-md-check
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+env:
+  TASK_VERSION: v3.51.1
+
+jobs:
+  claude-md-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The smoke manifest declares `task --list` / `task --dry up` — go-task
+      # must exist before the check CLI runs (pinned, same pattern as
+      # os-matrix.yml).
+      - name: Install go-task (pinned)
+        run: |
+          curl -sL https://taskfile.dev/install.sh -o /tmp/task-install.sh
+          sudo sh /tmp/task-install.sh -d -b /usr/local/bin "$TASK_VERSION"
+          task --version
+
+      # Pitfall 6 continuous enforcement: no tracked text file may carry CRLF
+      # in the index. Files explicitly marked `-text` in .gitattributes (the
+      # deliberate CRLF test fixture) are exempt — git's own attribute
+      # knowledge decides, not a hardcoded path list.
+      - name: CRLF guard (no CRLF in tracked text files)
+        run: |
+          git ls-files --eol | node -e "
+            let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{
+              const bad=d.trim().split('\n')
+                .filter(l=>/^i\/(crlf|mixed)/.test(l) && !/attr\/[^\t]*-text/.test(l));
+              if(bad.length){
+                console.error('CRLF guard VIOLATION: tracked text file(s) with CRLF in index:');
+                for(const l of bad)console.error('  '+l);
+                process.exit(1);
+              }
+              console.log('CRLF guard OK: no CRLF in tracked text files');
+            });"
+
+      # GATE-12: render root template (sample values) -> <=200 lines; tree
+      # files in place -> <=150 lines; command smoke for the ubuntu leg.
+      - name: GATE-12 render + budgets + command smoke
+        run: |
+          node scripts/checks/claude-md-check.mjs \
+            --root-template templates/claude/ROOT-CLAUDE.template.md \
+            --tree-file backend/CLAUDE.md \
+            --tree-file frontend/CLAUDE.md \
+            --smoke-manifest templates/claude/smoke-commands.json \
+            --leg ubuntu

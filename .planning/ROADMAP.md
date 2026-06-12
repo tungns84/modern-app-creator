@@ -56,7 +56,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-09-PLAN.md — TDD: plan-compliance gate + workflow + CODEOWNERS + platform config incl. D-10 W-001 deferral (wave 3)
+- [x] 01-09-PLAN.md — TDD: plan-compliance gate + workflow + CODEOWNERS + platform config incl. D-10 W-001 deferral (wave 3)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dogfood Bootstrap & Enforcement | 9/12 | In Progress|  |
+| 1. Dogfood Bootstrap & Enforcement | 10/12 | In Progress|  |
 | 2. Backend Foundation | 0/TBD | Not started | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |

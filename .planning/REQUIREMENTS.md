@@ -8,7 +8,7 @@
 ### Foundation — Application Preset (PRD Group A)
 
 - [ ] **FOUND-01**: Backend builds as Spring Modulith with 12 base modules (shared, appconfig, i18n, caching, observability, security, tenancy, audit, email, storage, jobs, usermgmt) + module 13 `bpm`; dependency DAG declared per module and verified at build — violation = build fail; module-count assertions dynamic by BPM option (FR-A01)
-- [ ] **FOUND-02**: Developer can boot the full local stack (PostgreSQL 16, Redis, Mailpit, MinIO, Keycloak, observability) with one command `task up` on Win/macOS/Linux without WSL (FR-A02)
+- [x] **FOUND-02**: Developer can boot the full local stack (PostgreSQL 16, Redis, Mailpit, MinIO, Keycloak, observability) with one command `task up` on Win/macOS/Linux without WSL (FR-A02)
 - [ ] **FOUND-03**: Cross-module events go through JDBC Event Publication Registry — republish on restart, bounded retry, old-record cleanup; kill-listener test proves no event loss AND no double-effect (FR-A03)
 - [ ] **FOUND-04**: Every business table carries `tenant_id` with Hibernate filter + TenantContext + tenant-keyed cache; v1 resolves one default tenant from config; 2-tenant DB-level isolation test proves the seam (FR-A04)
 - [ ] **FOUND-05**: Persistence uses PostgreSQL 16 only (no H2), Flyway migrations per-module, Testcontainers for integration tests, record DTOs + MapStruct at controller boundary (FR-A05)
@@ -18,7 +18,7 @@
 - [ ] **FOUND-09**: K8s manifests: Kustomize base/overlays, HPA, PDB, NetworkPolicy, probes, external secrets; Buildpacks BE image + multi-stage Nginx FE image (FR-A09)
 - [ ] **FOUND-10**: Modules read typed properties only; config source switches by profile: env+ConfigMap/Secret (default) or Consul KV; config read at boot, changed via rollout (FR-A10)
 - [ ] **FOUND-11**: Repo ships `EXTRACTION.md` module-to-service playbook (SPI inbound → event/read-model → `@Externalized` → ingress routing) (FR-A11)
-- [ ] **FOUND-12**: Tech Lead can run `scripts/init.(sh|ps1)` to rename `com.acme.app` → team values with auto-commit (FR-A12)
+- [x] **FOUND-12**: Tech Lead can run `scripts/init.(sh|ps1)` to rename `com.acme.app` → team values with auto-commit (FR-A12)
 - [ ] **FOUND-13**: Repo ships dev seed data: default admin account, user/role fixtures, sample BPM process — first `task up` gives a usable app (research gap P1)
 
 ### Authentication (PRD Group B — AuthN)
@@ -77,17 +77,17 @@
 - [ ] **GATE-07**: Contract-drift gate — backend OpenAPI → regen client → tsc green; deterministic spec serialization (FR-D07)
 - [ ] **GATE-08**: Secret scan (bundle + Docker layers) + CVE scan on images (FR-D08)
 - [ ] **GATE-09**: Tenancy isolation gate — cross-tenant read blocked with 2 seeded tenants, covering HTTP + async/jobs + BPM paths (FR-D09)
-- [ ] **GATE-10**: Plan-compliance gate — diff touching T3 paths requires `specs/NNN-*/plan.md` with valid `Approved-by:`; approver identity verified via Git hosting API/PR review metadata (CODEOWNERS-based, no self-approval, survives squash/rebase/bots); mechanism confirmed by Q-002 (FR-D10)
+- [x] **GATE-10**: Plan-compliance gate — diff touching T3 paths requires `specs/NNN-*/plan.md` with valid `Approved-by:`; approver identity verified via Git hosting API/PR review metadata (CODEOWNERS-based, no self-approval, survives squash/rebase/bots); mechanism confirmed by Q-002 (FR-D10)
 - [ ] **GATE-11**: Permission-declaration gate — protected API without declared permission = CI fail; detection mechanism locked by ADR (FR-D11)
-- [ ] **GATE-12**: CLAUDE.md checks — size budgets (root ≤200, tree ≤150 lines); smoke test that commands named in CLAUDE.md/ONBOARDING run (FR-D12)
+- [x] **GATE-12**: CLAUDE.md checks — size budgets (root ≤200, tree ≤150 lines); smoke test that commands named in CLAUDE.md/ONBOARDING run (FR-D12)
 
 ### Claude Code Pack & Methodology (PRD Group E)
 
-- [ ] **AGENT-01**: Three-layer CLAUDE.md (root + backend/ + frontend/, lazy-loaded, no duplication) within size budgets (FR-E01)
-- [ ] **AGENT-02**: Five skills shipped: `new-module` (DAG-correct scaffold + count bump + plan template), `new-feature` (zone-correct folder + i18n keys), `design-implement`, `plan` (emits plan.md with tier), `verify` (runs gates, summarizes failures by rule) (FR-E02)
-- [ ] **AGENT-03**: PreToolUse hooks deny Write/Edit on T3 paths without approved plan (explaining message + next step) and deny T4 command patterns; `strict` mode extends gate to T2; hook stability matrix per pinned Claude Code version confirmed by spike Q-010 (FR-E03)
-- [ ] **AGENT-04**: T1 allowlist pre-approves daily commands (`task *`, `./mvnw verify`, `npm run *`) — zero ceremony (FR-E04)
-- [ ] **AGENT-05**: S→P→I→V workflow operative with H1 (intent), H2 (plan approval — HARD for T3 via hook+CI), H3 (diff review — branch protection + CODEOWNERS for security/tenancy); tiers T1–T4 documented and enforced (FR-E05)
+- [x] **AGENT-01**: Three-layer CLAUDE.md (root + backend/ + frontend/, lazy-loaded, no duplication) within size budgets (FR-E01)
+- [x] **AGENT-02**: Five skills shipped: `new-module` (DAG-correct scaffold + count bump + plan template), `new-feature` (zone-correct folder + i18n keys), `design-implement`, `plan` (emits plan.md with tier), `verify` (runs gates, summarizes failures by rule) (FR-E02)
+- [x] **AGENT-03**: PreToolUse hooks deny Write/Edit on T3 paths without approved plan (explaining message + next step) and deny T4 command patterns; `strict` mode extends gate to T2; hook stability matrix per pinned Claude Code version confirmed by spike Q-010 (FR-E03)
+- [x] **AGENT-04**: T1 allowlist pre-approves daily commands (`task *`, `./mvnw verify`, `npm run *`) — zero ceremony (FR-E04)
+- [x] **AGENT-05**: S→P→I→V workflow operative with H1 (intent), H2 (plan approval — HARD for T3 via hook+CI), H3 (diff review — branch protection + CODEOWNERS for security/tenancy); tiers T1–T4 documented and enforced (FR-E05)
 - [x] **AGENT-06**: Spec artifacts `specs/NNN-feature/{spec,plan,tasks}.md`; branch named after spec; commits cite REQ-IDs; same-PR spec reconciliation rule (FR-E06)
 - [ ] **AGENT-07**: `ONBOARDING.md` (day-one path) + `specs/000-example/` walked through full S→P→I→V in commit history with per-artifact annotations (FR-E07)
 - [ ] **AGENT-08**: Harness quality: gate errors name rule + fix (agent self-corrects ≤2 rounds); resume convention; `verify --fast` <60s separate from `verify --full` — feasibility + gate-set defined by spike Q-004 (FR-E08)
@@ -120,7 +120,7 @@ Mapped by roadmap 2026-06-11. Coverage: 64/64 v1 requirements → 8 phases (ever
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | FOUND-01 | Phase 2 | Pending |
-| FOUND-02 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Complete |
 | FOUND-03 | Phase 2 | Pending |
 | FOUND-04 | Phase 3 | Pending |
 | FOUND-05 | Phase 2 | Pending |
@@ -130,7 +130,7 @@ Mapped by roadmap 2026-06-11. Coverage: 64/64 v1 requirements → 8 phases (ever
 | FOUND-09 | Phase 6 | Pending |
 | FOUND-10 | Phase 2 | Pending |
 | FOUND-11 | Phase 6 | Pending |
-| FOUND-12 | Phase 1 | Pending |
+| FOUND-12 | Phase 1 | Complete |
 | FOUND-13 | Phase 5 | Pending |
 | AUTH-01 | Phase 5 | Pending |
 | AUTH-02 | Phase 5 | Pending |
@@ -171,14 +171,14 @@ Mapped by roadmap 2026-06-11. Coverage: 64/64 v1 requirements → 8 phases (ever
 | GATE-07 | Phase 4 | Pending |
 | GATE-08 | Phase 6 | Pending |
 | GATE-09 | Phase 3 | Pending |
-| GATE-10 | Phase 1 | Pending |
+| GATE-10 | Phase 1 | Complete |
 | GATE-11 | Phase 3 | Pending |
-| GATE-12 | Phase 1 | Pending |
-| AGENT-01 | Phase 1 | Pending |
-| AGENT-02 | Phase 1 | Pending |
-| AGENT-03 | Phase 1 | Pending |
-| AGENT-04 | Phase 1 | Pending |
-| AGENT-05 | Phase 1 | Pending |
+| GATE-12 | Phase 1 | Complete |
+| AGENT-01 | Phase 1 | Complete |
+| AGENT-02 | Phase 1 | Complete |
+| AGENT-03 | Phase 1 | Complete |
+| AGENT-04 | Phase 1 | Complete |
+| AGENT-05 | Phase 1 | Complete |
 | AGENT-06 | Phase 1 | Complete |
 | AGENT-07 | Phase 8 | Pending |
 | AGENT-08 | Phase 2 | Pending |

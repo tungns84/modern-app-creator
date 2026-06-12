@@ -1,0 +1,18 @@
+[
+  {
+    "sha": "3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d",
+    "filename": ".planning/STATE.md",
+    "status": "modified",
+    "additions": 5,
+    "deletions": 2,
+    "changes": 7
+  },
+  {
+    "sha": "4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e",
+    "filename": ".planning/phases/01-dogfood-bootstrap-enforcement/01-09-SUMMARY.md",
+    "status": "added",
+    "additions": 120,
+    "deletions": 0,
+    "changes": 120
+  }
+]

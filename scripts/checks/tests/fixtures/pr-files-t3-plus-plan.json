@@ -1,0 +1,18 @@
+[
+  {
+    "sha": "7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b",
+    "filename": ".github/workflows/x.yml",
+    "status": "added",
+    "additions": 40,
+    "deletions": 0,
+    "changes": 40
+  },
+  {
+    "sha": "8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c",
+    "filename": "specs/007-gate-probe/plan.md",
+    "status": "added",
+    "additions": 30,
+    "deletions": 0,
+    "changes": 30
+  }
+]

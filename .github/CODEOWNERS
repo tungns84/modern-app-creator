@@ -1,0 +1,42 @@
+# CODEOWNERS — review SURFACE for T3 (high-risk) areas (plan 01-09, GATE-10).
+#
+# CODEOWNERS parsing stays platform-side (Don't-Hand-Roll) — the CI gate does
+# NOT re-parse this file. The platform-level `require_code_owner_review`
+# REQUIREMENT is deliberately OFF while waiver W-001 (.cowork/waivers.json) is
+# active: the sole CODEOWNER below is also the only PR author, so enabling it
+# would deadlock every PR (GitHub rejects self-approval with HTTP 422 —
+# Q-002 Scenario 1). On W-001 expiry (2026-09-30) or when a second person
+# joins, enable require_code_owner_review on the ruleset (recorded obligation,
+# D-10).
+
+# Future application T3 areas (paths land in later phases)
+security/**            @tungns84
+tenancy/**             @tungns84
+
+# CI workflows, platform config surface
+.github/**             @tungns84
+
+# Tier/waiver registers — the enforcement data plane
+.cowork/**             @tungns84
+
+# Layered agent constitutions (machine-checked, D-15)
+backend/CLAUDE.md      @tungns84
+frontend/CLAUDE.md     @tungns84
+templates/claude/**    @tungns84
+
+# Architecture decisions and methodology docs
+docs/adr/**            @tungns84
+docs/methodology/**    @tungns84
+
+# Spec units — the GATE-10 binding artifacts
+specs/**               @tungns84
+
+# Claude Code pack: hooks, settings, skills (L1 enforcement)
+.claude/**             @tungns84
+
+# CI gate scripts (L2 enforcement)
+scripts/checks/**      @tungns84
+
+# Task runner + local stack definition
+Taskfile.yml           @tungns84
+infra/compose.yaml     @tungns84

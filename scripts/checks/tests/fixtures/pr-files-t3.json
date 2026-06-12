@@ -1,0 +1,18 @@
+[
+  {
+    "sha": "5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f",
+    "filename": ".github/workflows/x.yml",
+    "status": "added",
+    "additions": 40,
+    "deletions": 0,
+    "changes": 40
+  },
+  {
+    "sha": "6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a",
+    "filename": "src/util.ts",
+    "status": "modified",
+    "additions": 2,
+    "deletions": 2,
+    "changes": 4
+  }
+]

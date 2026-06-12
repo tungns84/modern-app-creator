@@ -1,0 +1,37 @@
+[
+  {
+    "id": 4477000811,
+    "user": { "login": "reviewer-b", "type": "User" },
+    "state": "APPROVED",
+    "commit_id": "a7f9e32deadbeefcafe1234567890abcdef12345",
+    "submitted_at": "2026-06-11T10:00:00Z"
+  },
+  {
+    "id": 4477000812,
+    "user": { "login": "reviewer-c", "type": "User" },
+    "state": "DISMISSED",
+    "commit_id": "a7f9e32deadbeefcafe1234567890abcdef12345",
+    "submitted_at": "2026-06-11T10:05:00Z"
+  },
+  {
+    "id": 4477000813,
+    "user": { "login": "reviewer-d", "type": "User" },
+    "state": "COMMENTED",
+    "commit_id": "a7f9e32deadbeefcafe1234567890abcdef12345",
+    "submitted_at": "2026-06-11T10:10:00Z"
+  },
+  {
+    "id": 4477000814,
+    "user": { "login": "reviewer-b", "type": "User" },
+    "state": "CHANGES_REQUESTED",
+    "commit_id": "a7f9e32deadbeefcafe1234567890abcdef12345",
+    "submitted_at": "2026-06-11T11:00:00Z"
+  },
+  {
+    "id": 4477000815,
+    "user": { "login": "reviewer-e", "type": "User" },
+    "state": "PENDING",
+    "commit_id": "a7f9e32deadbeefcafe1234567890abcdef12345",
+    "submitted_at": null
+  }
+]

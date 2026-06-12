@@ -9,7 +9,7 @@ complete.
 
 ## Scope
 
-Gap-closure for findings in `.planning/phases/01-dogfood-bootstrap-enforcement/01-REVIEW.md`:
+Gap-closure for three findings from the Phase-01 code review:
 
 - **CR-01** (`scripts/init-core.mjs`): `artifactId` containing a hyphen (a value its
   own `ARTIFACT_ID_RE` permits, e.g. `my-app`) is used verbatim as the Java package

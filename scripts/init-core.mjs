@@ -231,7 +231,12 @@ function pruneEmptyAncestors(rootDir, dir) {
 
 function resolveReplacements({ groupId, artifactId }) {
   const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
-  const packageRoot = `${groupId}.${artifactId}`;
+  // The Java package leaf is NOT the Maven artifactId: artifactId may contain
+  // hyphens (ARTIFACT_ID_RE allows them, e.g. "my-app"), which are illegal in
+  // Java identifiers. Strip hyphens for the package leaf; keep artifactId
+  // verbatim for the pom.xml `acme-app` literal (CR-01).
+  const packageLeaf = artifactId.replace(/-/g, '');
+  const packageRoot = `${groupId}.${packageLeaf}`;
   const values = {
     packageRoot,
     packagePath: packageRoot.replaceAll('.', '/'),

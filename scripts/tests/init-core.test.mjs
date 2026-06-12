@@ -229,3 +229,24 @@ test('idempotency: a second run detects zero literals and exits 0 printing "alre
   );
   assert.equal(commitCount(root), 2, 'second run must not create another commit');
 });
+
+// -------------------------------------------------- CR-01 hyphenated artifactId
+
+test('CR-01: a hyphenated artifactId yields a hyphen-free Java package but keeps the artifactId verbatim in pom', (t) => {
+  const root = makeFixture(t);
+  const res = runMain(root, ['--group-id', 'com.example', '--artifact-id', 'my-app', '--project-name', 'My App']);
+  assert.equal(res.status, 0, `stdout: ${res.stdout}\nstderr: ${res.stderr}`);
+
+  // Java package leaf must strip the hyphen — "my-app" is illegal in a Java identifier.
+  const appJava = readFileSync(path.join(root, 'src', 'com', 'example', 'myapp', 'App.java'), 'utf8');
+  assert.ok(
+    appJava.includes('package com.example.myapp;'),
+    `Java package must be hyphen-free, got: ${appJava}`,
+  );
+  assert.ok(!appJava.includes('my-app'), 'no hyphen may leak into a Java identifier');
+
+  // Maven artifactId stays verbatim (acme-app literal → my-app).
+  const pom = readFileSync(path.join(root, 'pom.xml'), 'utf8');
+  assert.ok(pom.includes('<artifactId>my-app</artifactId>'), `pom artifactId verbatim, got: ${pom}`);
+  assert.ok(pom.includes('<groupId>com.example.myapp</groupId>'), `pom groupId hyphen-free, got: ${pom}`);
+});

@@ -75,13 +75,21 @@ jobs:
       # the fix (FR-E08). Strict commit binding: only approvals with
       # commit_id == head SHA count (Q-002 spike decision, T-01-27).
       - name: GATE-10 verdict
+        # Pass dynamic values via env (NOT ${{ }} interpolation into the script
+        # body): head_ref is the attacker-controlled PR branch name and git refs
+        # may contain $()/backticks — direct interpolation is a shell
+        # script-injection vector in the enforcement floor itself (CR-02).
+        env:
+          AUTHOR: ${{ steps.meta.outputs.author }}
+          HEAD_REF: ${{ steps.meta.outputs.head_ref }}
+          HEAD_SHA: ${{ steps.meta.outputs.head_sha }}
         run: |
           node scripts/checks/plan-compliance.mjs \
             --files /tmp/pr-files.json \
             --reviews /tmp/pr-reviews.json \
-            --author "${{ steps.meta.outputs.author }}" \
-            --branch "${{ steps.meta.outputs.head_ref }}" \
-            --head-sha "${{ steps.meta.outputs.head_sha }}" \
+            --author "$AUTHOR" \
+            --branch "$HEAD_REF" \
+            --head-sha "$HEAD_SHA" \
             --specs-dir specs \
             --waivers .cowork/waivers.json
 

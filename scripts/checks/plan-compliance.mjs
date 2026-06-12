@@ -90,6 +90,18 @@ export function evaluate({
   const tiersData = tiers ?? loadTiers(process.cwd());
   const nowMs = now instanceof Date ? now.getTime() : Date.parse(now ?? new Date().toISOString());
 
+  // Fail closed on an unparseable clock: a NaN nowMs would make waiverExpired
+  // treat an expired waiver as still valid (fail-OPEN) — the inverse of this
+  // system's fail-closed contract (WR-04).
+  if (Number.isNaN(nowMs)) {
+    reasons.push(
+      "FAIL [GATE-10]: invalid clock (--now could not be parsed) — failing " +
+        "closed because waiver expiry cannot be evaluated. Fix: pass a valid " +
+        "ISO timestamp to --now, or omit it to use the current time.",
+    );
+    return { verdict: "FAIL", reasons, warnings };
+  }
+
   // Step 1-2: classify changed files via the SHARED matcher (D-22).
   const files = (Array.isArray(changedFiles) ? changedFiles : []).map(fileName).filter(Boolean);
   const t3Hits = [];

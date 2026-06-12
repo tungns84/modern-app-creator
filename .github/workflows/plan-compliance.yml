@@ -1,0 +1,101 @@
+# plan-compliance — the L2 enforcement floor for GATE-10 (plan 01-09, D-16).
+#
+# Dual triggers (Pitfall 4, validated live in the Q-002 spike): a green
+# pull_request_review run does NOT replace a red same-named pull_request
+# check-run — the review-triggered job must re-run the failed sibling run via
+# the Actions API (hence `actions: write`).
+#
+# The job id `plan-compliance` IS the required-status-check context name —
+# check-run name = Actions job id (Q-002 verified); it must match across both
+# trigger events and the ruleset `context` string exactly.
+#
+# Verdict logic lives in scripts/checks/plan-compliance.mjs (pure core,
+# fixture-tested) which imports the SHARED matcher + spec-binding helpers from
+# .claude/hooks/lib/tiers.mjs — hook (L1) and CI (L2) read ONE tier/binding
+# source (D-22). This shell only fetches inputs fresh via `gh api` (Pitfall 5:
+# derive the PR number once from the event, fetch everything else fresh) and
+# pipes them into the CLI.
+name: plan-compliance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: write # REQUIRED: re-run of the failed sibling pull_request run (Pitfall 4 fix, Q-002 Scenario 3c)
+
+jobs:
+  plan-compliance:
+    runs-on: ubuntu-latest
+    steps:
+      # Both trigger events carry the pull_request object — one derivation
+      # covers both (Pitfall 5: derive once, fetch everything else fresh).
+      - name: Derive PR number once from the event
+        id: pr
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      # Check out the PR HEAD (not the merge ref): the spec binding resolves
+      # specs/NNN-*/plan.md from the head branch (01-12 convention), and the
+      # gate scripts + .cowork/tiers.json must be read at the same SHA the
+      # approval is commit-bound to.
+      - name: Checkout PR head (specs tree + gate scripts at the head SHA)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      # One API style: gh (RESEARCH Alternatives). --paginate emits one JSON
+      # array PER PAGE — `--slurp` + `add` flattens (the classic 30-item
+      # pagination bug, Q-002 spike notes).
+      - name: Fetch PR files, reviews, author, head ref fresh via gh api
+        id: meta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ steps.pr.outputs.number }}
+        run: |
+          gh api "repos/$REPO/pulls/$PR/files" --paginate --slurp --jq 'add // []' > /tmp/pr-files.json
+          gh api "repos/$REPO/pulls/$PR/reviews" --paginate --slurp --jq 'add // []' > /tmp/pr-reviews.json
+          AUTHOR=$(gh api "repos/$REPO/pulls/$PR" --jq '.user.login')
+          HEAD_REF=$(gh api "repos/$REPO/pulls/$PR" --jq '.head.ref')
+          HEAD_SHA=$(gh api "repos/$REPO/pulls/$PR" --jq '.head.sha')
+          {
+            echo "author=$AUTHOR"
+            echo "head_ref=$HEAD_REF"
+            echo "head_sha=$HEAD_SHA"
+          } >> "$GITHUB_OUTPUT"
+
+      # Exit 0 on PASS, 1 on FAIL; every red line names the violated rule +
+      # the fix (FR-E08). Strict commit binding: only approvals with
+      # commit_id == head SHA count (Q-002 spike decision, T-01-27).
+      - name: GATE-10 verdict
+        run: |
+          node scripts/checks/plan-compliance.mjs \
+            --files /tmp/pr-files.json \
+            --reviews /tmp/pr-reviews.json \
+            --author "${{ steps.meta.outputs.author }}" \
+            --branch "${{ steps.meta.outputs.head_ref }}" \
+            --head-sha "${{ steps.meta.outputs.head_sha }}" \
+            --specs-dir specs \
+            --waivers .cowork/waivers.json
+
+      # Pitfall-4 unstick (Q-002 Scenario 3c, validated live): the green
+      # review-triggered run does NOT supersede the red pull_request run on
+      # the same head SHA — re-running the failed sibling replaces its
+      # check-run in place and flips mergeable_state to clean. Runs only
+      # after the verdict above passed (a failed step skips the rest).
+      - name: Re-run failed sibling pull_request run (Pitfall 4)
+        if: github.event_name == 'pull_request_review'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ steps.meta.outputs.head_sha }}
+        run: |
+          FAILED_RUN=$(gh api "repos/$REPO/actions/runs?event=pull_request&head_sha=$HEAD_SHA&status=failure" \
+            --jq '[.workflow_runs[] | select(.name == "plan-compliance")] | first | .id // empty')
+          [ -n "$FAILED_RUN" ] && gh api -X POST "repos/$REPO/actions/runs/$FAILED_RUN/rerun-failed-jobs" || true

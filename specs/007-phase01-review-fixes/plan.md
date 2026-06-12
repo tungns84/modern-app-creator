@@ -6,8 +6,8 @@ tier: T3
 
 Touches `.github/**` (the plan-compliance workflow — the L2 enforcement floor) and
 `scripts/checks/**` plus the init engine `scripts/init-core.mjs` — all T3 paths
-(AI-COWORK §5). Gap-closure for Critical findings recorded in
-`.planning/phases/01-dogfood-bootstrap-enforcement/01-REVIEW.md`.
+(AI-COWORK §5). Gap-closure for Critical findings from the Phase-01 code review
+(CR-01, CR-02, WR-04 — evidence summarized inline below).
 
 ## Files to touch
 

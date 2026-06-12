@@ -372,6 +372,25 @@ test("13. expired waiver FAILS with 'waiver expired'", async () => {
   assert.match(joined(result), /waiver expired/i);
 });
 
+// Case 15 — WR-04: an unparseable --now clock must FAIL closed, never let an
+// expired waiver slip through as valid via a NaN comparison (fail-OPEN).
+test("15. WR-04: invalid --now clock fails closed instead of validating an expired waiver", async () => {
+  const evaluate = await loadEvaluate();
+  const result = evaluate({
+    changedFiles: fixture("pr-files-t3.json"),
+    branch: "feat/002-x",
+    specsTree: makeSpecsTree({ "002-plan-compliance-ci": APPROVED_PLAN_MD }),
+    reviews: [],
+    author: AUTHOR,
+    waivers: WAIVERS,
+    tiers: TIERS,
+    headSha: HEAD_SHA,
+    now: "not-a-real-date",
+  });
+  assert.equal(result.verdict, "FAIL");
+  assert.match(joined(result), /invalid clock/i);
+});
+
 // Case 14 — reduceReviews: chronological list reduced to latest per login;
 // only APPROVED survives; DISMISSED never counts; strict commit binding
 test("14. reduceReviews latest-per-user reduction rules", async () => {

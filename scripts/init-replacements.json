@@ -1,0 +1,5 @@
+{
+  "com.acme.app": "packageRoot",
+  "com/acme/app": "packagePath",
+  "acme-app": "artifactId"
+}

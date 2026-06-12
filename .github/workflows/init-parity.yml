@@ -1,0 +1,182 @@
+name: init-parity
+
+# 2-OS parity proof (D-23, FOUND-12): init.sh on ubuntu and init.ps1 on windows
+# must produce byte-identical trees after EOL normalization. Each leg also
+# asserts idempotency: a second invocation exits 0 printing "already initialized".
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  parity-ubuntu:
+    runs-on: ubuntu-latest
+    env:
+      FIXTURE: ${{ github.workspace }}/.parity-fixture
+      MANIFEST_OUT: ${{ github.workspace }}/manifest-ubuntu.txt
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Seed fixture tree (tracked files only, fresh git history)
+        shell: bash
+        run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
+          mkdir -p "$FIXTURE"
+          git archive HEAD | tar -x -C "$FIXTURE"
+          cd "$FIXTURE"
+          git init -q
+          git config user.email ci@example.com
+          git config user.name "CI"
+          git config core.autocrlf false
+          git add -A
+          git commit -q -m seed
+
+      - name: Run init.sh (first run)
+        shell: bash
+        run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
+          cd "$FIXTURE"
+          ./scripts/init.sh --group-id com.example --artifact-id demo --project-name Demo
+
+      - name: Assert idempotency (second run)
+        shell: bash
+        run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
+          cd "$FIXTURE"
+          out=$(./scripts/init.sh --group-id com.example --artifact-id demo --project-name Demo)
+          echo "$out"
+          echo "$out" | grep -q "already initialized" || { echo "missing idempotency message"; exit 1; }
+
+      - name: Emit EOL-normalized sha256 manifest
+        shell: bash
+        run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
+          cd "$FIXTURE"
+          node --input-type=module - <<'JS'
+          import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+          import { createHash } from "node:crypto";
+          import path from "node:path";
+          const lines = [];
+          function walk(dir) {
+            for (const e of readdirSync(dir, { withFileTypes: true })) {
+              if (e.name === ".git") continue;
+              const p = path.join(dir, e.name);
+              if (e.isDirectory()) { walk(p); continue; }
+              let buf = readFileSync(p);
+              if (!buf.includes(0)) buf = Buffer.from(buf.toString("utf8").replaceAll("\r\n", "\n"));
+              const rel = path.relative(".", p).split(path.sep).join("/");
+              lines.push(createHash("sha256").update(buf).digest("hex") + "  " + rel);
+            }
+          }
+          walk(".");
+          lines.sort();
+          writeFileSync(process.env.MANIFEST_OUT, lines.join("\n") + "\n");
+          console.log(lines.length + " files hashed -> " + process.env.MANIFEST_OUT);
+          JS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manifest-ubuntu
+          path: manifest-ubuntu.txt
+          if-no-files-found: error
+
+  parity-windows:
+    runs-on: windows-latest
+    env:
+      FIXTURE: ${{ github.workspace }}/.parity-fixture
+      MANIFEST_OUT: ${{ github.workspace }}/manifest-windows.txt
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Seed fixture tree (tracked files only, fresh git history)
+        shell: bash
+        run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
+          mkdir -p "$FIXTURE"
+          git archive HEAD | tar -x -C "$FIXTURE"
+          cd "$FIXTURE"
+          git init -q
+          git config user.email ci@example.com
+          git config user.name "CI"
+          git config core.autocrlf false
+          git add -A
+          git commit -q -m seed
+
+      - name: Run init.ps1 (first run)
+        shell: pwsh
+        run: |
+          Set-Location $env:FIXTURE
+          & ./scripts/init.ps1 --group-id com.example --artifact-id demo --project-name Demo
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Assert idempotency (second run)
+        shell: pwsh
+        run: |
+          Set-Location $env:FIXTURE
+          $out = (& ./scripts/init.ps1 --group-id com.example --artifact-id demo --project-name Demo 2>&1 | Out-String)
+          Write-Host $out
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          if (-not $out.Contains("already initialized")) { Write-Error "missing idempotency message"; exit 1 }
+
+      - name: Emit EOL-normalized sha256 manifest
+        shell: bash
+        run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
+          cd "$FIXTURE"
+          node --input-type=module - <<'JS'
+          import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+          import { createHash } from "node:crypto";
+          import path from "node:path";
+          const lines = [];
+          function walk(dir) {
+            for (const e of readdirSync(dir, { withFileTypes: true })) {
+              if (e.name === ".git") continue;
+              const p = path.join(dir, e.name);
+              if (e.isDirectory()) { walk(p); continue; }
+              let buf = readFileSync(p);
+              if (!buf.includes(0)) buf = Buffer.from(buf.toString("utf8").replaceAll("\r\n", "\n"));
+              const rel = path.relative(".", p).split(path.sep).join("/");
+              lines.push(createHash("sha256").update(buf).digest("hex") + "  " + rel);
+            }
+          }
+          walk(".");
+          lines.sort();
+          writeFileSync(process.env.MANIFEST_OUT, lines.join("\n") + "\n");
+          console.log(lines.length + " files hashed -> " + process.env.MANIFEST_OUT);
+          JS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manifest-windows
+          path: manifest-windows.txt
+          if-no-files-found: error
+
+  parity-compare:
+    runs-on: ubuntu-latest
+    needs: [parity-ubuntu, parity-windows]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: manifest-ubuntu
+          path: manifests/ubuntu
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: manifest-windows
+          path: manifests/windows
+
+      - name: Diff manifests (must be byte-identical)
+        run: |
+          git diff --no-index manifests/ubuntu/manifest-ubuntu.txt manifests/windows/manifest-windows.txt
+          echo "parity OK: ubuntu and windows trees are byte-identical after EOL normalization"

@@ -12,6 +12,15 @@
         "required_approving_review_count>=1"
       ],
       "note": "While W-001 is active, the GitHub ruleset settings listed in platformDeferred stay OFF so the sole CODEOWNER (= PR author) is not deadlocked; the plan-compliance gate applies the waiver-aware approval logic instead. On W-001 expiry or when a second person joins, require_code_owner_review and required_approving_review_count>=1 MUST be enabled on the ruleset."
+    },
+    {
+      "id": "W-002",
+      "scope": "macos-task-up-verification",
+      "reason": "no macOS host with Docker available during Phase-01 execution; Windows leg verified live (6 services healthy, 96s) and Linux leg covered by the os-matrix CI stack-ubuntu job",
+      "approvedBy": "tungns84",
+      "created": "2026-06-13",
+      "expires": "2026-09-30",
+      "note": "FOUND-02 plan-01-05 must_have required macOS `task up` verified OR waived before phase completion. This waiver defers the macOS leg to the next available macOS session. On expiry or first macOS access, run `task up` on macOS, confirm all 6 services reach healthy, and record the result in 01-05-SUMMARY.md, then retire this waiver."
     }
   ]
 }

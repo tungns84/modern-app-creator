@@ -1,0 +1,8 @@
+{
+  "$comment": "GATE-12 command smoke manifest (Pitfall 9: explicit declaration only — no prose-regex extraction from CLAUDE.md). Each entry: cmd (argv string, run via execFileSync without a shell) + legs (CI legs it runs on). Docker-needing commands MUST restrict to the ubuntu leg. Grows as later phases add canonical commands (GATE-12 extends to ONBOARDING in Phase 8).",
+  "commands": [
+    { "cmd": "task --list", "legs": ["ubuntu", "windows", "macos"] },
+    { "cmd": "task --dry up", "legs": ["ubuntu", "windows", "macos"] },
+    { "cmd": "node --version", "legs": ["ubuntu", "windows", "macos"] }
+  ]
+}

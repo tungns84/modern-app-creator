@@ -1,0 +1,7 @@
+{
+  "session_id": "fixture",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": { "command": "echo hacked > .cowork/tiers.json" },
+  "permission_mode": "default"
+}

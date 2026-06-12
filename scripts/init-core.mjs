@@ -291,14 +291,17 @@ function git(args) {
 
 function checkTaskVersion() {
   // go-task pinned-version check (root CLAUDE.md constraint: v3.51.1). Warn only.
-  const PINNED = 'v3.51.1';
+  // `task --version` output varies by install channel ("Task version: v3.51.1" vs
+  // plain "3.51.1") — compare the extracted semver, not the raw string.
+  const PINNED = '3.51.1';
   try {
     const out = execFileSync('task', ['--version'], { encoding: 'utf8' }).trim();
-    if (!out.includes(PINNED)) {
-      console.warn(`warning: go-task version mismatch — expected ${PINNED}, got "${out}"`);
+    const version = out.match(/\d+\.\d+\.\d+/)?.[0];
+    if (version !== PINNED) {
+      console.warn(`warning: go-task version mismatch — expected v${PINNED}, got "${out}"`);
     }
   } catch {
-    console.warn(`warning: go-task (task) not found — install ${PINNED} via winget/brew/apt`);
+    console.warn(`warning: go-task (task) not found — install v${PINNED} via winget/brew/apt`);
   }
 }
 

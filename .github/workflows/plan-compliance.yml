@@ -59,8 +59,9 @@ jobs:
           REPO: ${{ github.repository }}
           PR: ${{ steps.pr.outputs.number }}
         run: |
-          gh api "repos/$REPO/pulls/$PR/files" --paginate --slurp --jq 'add // []' > /tmp/pr-files.json
-          gh api "repos/$REPO/pulls/$PR/reviews" --paginate --slurp --jq 'add // []' > /tmp/pr-reviews.json
+          # gh rejects --slurp combined with --jq ("not supported") — slurp pages first, flatten with standalone jq
+          gh api "repos/$REPO/pulls/$PR/files" --paginate --slurp | jq 'add // []' > /tmp/pr-files.json
+          gh api "repos/$REPO/pulls/$PR/reviews" --paginate --slurp | jq 'add // []' > /tmp/pr-reviews.json
           AUTHOR=$(gh api "repos/$REPO/pulls/$PR" --jq '.user.login')
           HEAD_REF=$(gh api "repos/$REPO/pulls/$PR" --jq '.head.ref')
           HEAD_SHA=$(gh api "repos/$REPO/pulls/$PR" --jq '.head.sha')

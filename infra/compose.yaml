@@ -1,0 +1,106 @@
+# Local development stack (FOUND-02) — boot with `task up`, tear down with `task down`.
+#
+# Readiness contract: every service defines a healthcheck that runs INSIDE the
+# container (no host-side curl quirks); `docker compose up -d --wait` blocks
+# until all healthchecks pass — no hand-rolled wait loops anywhere.
+#
+# Supply-chain posture (T-01-14): official/org images only, tags pinned to an
+# exact release (no bare `latest`). Digest pinning is an optional follow-up.
+# The secret/CVE image-scan gate (GATE-08, gitleaks + Trivy) arrives in Phase 6
+# — until then this pin discipline is the only image supply-chain control.
+#
+# Credentials in this file are DEV-ONLY (T-01-15): they boot a local throwaway
+# stack and must never be reused in any deployed environment.
+
+name: cowork-local
+
+services:
+  postgres:
+    image: postgres:16.14-alpine # PG16 locked; minor pinned 2026-06-11
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: app # dev-only credentials — local stack only, never production
+      POSTGRES_PASSWORD: app # dev-only credentials — local stack only, never production
+      POSTGRES_DB: app
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      start_period: 5s
+      interval: 5s
+      retries: 10
+
+  valkey:
+    image: valkey/valkey:8.1.8 # D-17: Valkey (BSD-3), wire-compatible Redis; minor pinned 2026-06-11
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      start_period: 5s
+      interval: 5s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.30.1 # SMTP capture; tag pinned 2026-06-11
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    healthcheck:
+      # A8 verified at adoption (2026-06-11): GET /livez returns OK on the UI port;
+      # image ships wget (alpine base).
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8025/livez"]
+      start_period: 5s
+      interval: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z # S3-compatible storage; release pinned 2026-06-11
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000" # S3 API (host port 9000 belongs to MinIO — Keycloak mgmt 9000 stays unpublished)
+      - "9001:9001" # Console
+    environment:
+      MINIO_ROOT_USER: minioadmin # dev-only credentials — local stack only, never production
+      MINIO_ROOT_PASSWORD: minioadmin # dev-only credentials — local stack only, never production
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      # A8 verified at adoption (2026-06-11): image ships curl at /usr/bin/curl.
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      start_period: 5s
+      interval: 5s
+      retries: 10
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.6.3
+    command: start-dev # realm wiring is Phase 3 scope — container only for now
+    ports:
+      - "8080:8080" # mgmt port 9000 deliberately NOT published (MinIO owns host 9000)
+    environment:
+      KC_HEALTH_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin # dev-only credentials
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin # dev-only credentials — local stack only, never production
+    healthcheck:
+      # image has no curl — bash /dev/tcp probe against mgmt port 9000
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '\"status\": \"UP\"'"]
+      start_period: 30s
+      interval: 10s
+      retries: 12
+
+  lgtm:
+    image: grafana/otel-lgtm:0.28.0 # D-18: single local observability image; tag pinned 2026-06-11
+    ports:
+      - "3000:3000" # Grafana UI (admin/admin — dev-only)
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    healthcheck:
+      # A8 verified at adoption (2026-06-11): image ships curl; Grafana health API on 3000.
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      start_period: 30s
+      interval: 10s
+      retries: 12
+
+volumes:
+  postgres-data:
+  minio-data:

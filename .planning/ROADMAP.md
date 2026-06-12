@@ -60,7 +60,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 01-10-PLAN.md — Three-layer CLAUDE.md content + claude-md-check CI (wave 4)
+- [x] 01-10-PLAN.md — Three-layer CLAUDE.md content + claude-md-check CI (wave 4)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dogfood Bootstrap & Enforcement | 10/12 | In Progress|  |
+| 1. Dogfood Bootstrap & Enforcement | 11/12 | In Progress|  |
 | 2. Backend Foundation | 0/TBD | Not started | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |

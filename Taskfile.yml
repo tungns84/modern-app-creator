@@ -1,0 +1,31 @@
+# Task runner (go-task v3.51.1) — POSIX-sh syntax only (mvdan/sh runs these
+# natively on Windows; no bash/WSL required). Only `docker`, `node`, `task`
+# may be called as executables (cross-OS PATH guarantee).
+#
+# Readiness contract (FOUND-02): `up` delegates ALL readiness to compose
+# healthchecks via `--wait` — zero hand-rolled wait loops here.
+#
+# NOTE: the `verify` task is owned by plan 01-11 (Q-004 gate-set contract) —
+# do not add it here.
+version: '3'
+
+tasks:
+  up:
+    desc: Boot the full local stack (waits for healthchecks)
+    cmds:
+      - docker compose -f infra/compose.yaml up -d --wait
+
+  down:
+    desc: Tear down the local stack
+    cmds:
+      - docker compose -f infra/compose.yaml down
+
+  ps:
+    desc: Show local stack service status
+    cmds:
+      - docker compose -f infra/compose.yaml ps
+
+  logs:
+    desc: Follow local stack logs (last 100 lines)
+    cmds:
+      - docker compose -f infra/compose.yaml logs -f --tail=100

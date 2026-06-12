@@ -1,0 +1,117 @@
+# os-matrix — D-04 split (FOUND-02):
+#   - ubuntu leg proves the real stack: `task up` with healthcheck-gated readiness.
+#   - windows/macos legs prove toolchain portability only (container-free smoke):
+#     GitHub-hosted macOS runners ship no Docker daemon, and Windows runners
+#     cannot run Linux containers reliably — integration needs only one OS.
+#
+# JDK leg note: the setup-java step here is a minimal STANDING smoke. The full
+# backend toolchain matrix (compiler/JUnit/Mockito/MapStruct/JaCoCo/ArchUnit on
+# JDK 25) ran once in the jdk25-toolchain spike (all 3 OS green, Temurin
+# 25.0.3); Phase 2's real `./mvnw verify` supersedes this smoke.
+#
+# Security (V14): only official `actions/*` actions, pinned by major.
+# go-task pinned to v3.51.1 on every leg (official installer, explicit version).
+name: os-matrix
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+env:
+  TASK_VERSION: v3.51.1
+
+jobs:
+  stack-ubuntu:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install go-task (pinned)
+        run: |
+          curl -sL https://taskfile.dev/install.sh -o /tmp/task-install.sh
+          sudo sh /tmp/task-install.sh -d -b /usr/local/bin "$TASK_VERSION"
+          task --version
+
+      - name: task up (waits for all healthchecks)
+        run: task up
+
+      - name: Assert all 6 services healthy
+        run: |
+          docker compose -f infra/compose.yaml ps --format json | node -e "
+            let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{
+              const rows=d.trim().split('\n').map(JSON.parse);
+              for(const r of rows)console.log(r.Service, r.Health||r.State);
+              if(rows.length!==6){console.error('expected 6 services, got '+rows.length);process.exit(1);}
+              const bad=rows.filter(r=>r.Health!=='healthy');
+              if(bad.length){console.error('unhealthy: '+bad.map(r=>r.Service).join(','));process.exit(1);}
+              console.log('ALL 6 HEALTHY');
+            });"
+
+      - name: task down
+        if: always()
+        run: task down
+
+  smoke-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install go-task (pinned)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/taskbin"
+          curl -sL https://taskfile.dev/install.sh -o "$RUNNER_TEMP/task-install.sh"
+          sh "$RUNNER_TEMP/task-install.sh" -d -b "$RUNNER_TEMP/taskbin" "$TASK_VERSION"
+          echo "$RUNNER_TEMP/taskbin" >> "$GITHUB_PATH"
+
+      - name: task smoke
+        shell: bash
+        run: |
+          task --version
+          task --list
+
+      - name: Validate compose definition (static parse, no containers)
+        shell: bash
+        run: docker compose -f infra/compose.yaml config -q
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: JDK 25 smoke
+        shell: bash
+        run: java -version 2>&1 | grep '"25' # assert resolved runtime is JDK 25
+
+  smoke-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install go-task (pinned)
+        run: |
+          mkdir -p "$RUNNER_TEMP/taskbin"
+          curl -sL https://taskfile.dev/install.sh -o "$RUNNER_TEMP/task-install.sh"
+          sh "$RUNNER_TEMP/task-install.sh" -d -b "$RUNNER_TEMP/taskbin" "$TASK_VERSION"
+          echo "$RUNNER_TEMP/taskbin" >> "$GITHUB_PATH"
+
+      - name: task smoke
+        run: |
+          task --version
+          task --list
+
+      # macOS runners ship no Docker CLI — install the standalone docker-compose
+      # binary for static validation only (no daemon needed for `config -q`).
+      - name: Validate compose definition (standalone docker-compose, static parse)
+        run: |
+          brew install docker-compose
+          docker-compose -f infra/compose.yaml config -q
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: JDK 25 smoke
+        run: java -version 2>&1 | grep '"25' # assert resolved runtime is JDK 25

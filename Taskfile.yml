@@ -5,8 +5,12 @@
 # Readiness contract (FOUND-02): `up` delegates ALL readiness to compose
 # healthchecks via `--wait` — zero hand-rolled wait loops here.
 #
-# NOTE: the `verify` task is owned by plan 01-11 (Q-004 gate-set contract) —
-# do not add it here.
+# Verify spine (Q-004 contract): `verify` and `verify:fast` delegate to
+# scripts/checks/run-gate.mjs, which prints one `GATE <name> <millis>ms
+# <PASS|FAIL>` line per gate plus a TOTAL line. In Phase 1 both run the same
+# static set; the D-19 fast/full seam is the two separate task definitions —
+# Phase 2 adds container-class gates to `verify` only. Gate-set changes are
+# T3 (this file is on the tiers.json T3 list).
 version: '3'
 
 tasks:
@@ -29,3 +33,13 @@ tasks:
     desc: Follow local stack logs (last 100 lines)
     cmds:
       - docker compose -f infra/compose.yaml logs -f --tail=100
+
+  verify:
+    desc: Run every Phase-1 gate with per-gate timing (Q-004 full set)
+    cmds:
+      - node scripts/checks/run-gate.mjs --mode full
+
+  verify:fast:
+    desc: Static-only gate set, <60s budget (D-19 — same as verify in Phase 1)
+    cmds:
+      - node scripts/checks/run-gate.mjs --mode fast

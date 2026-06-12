@@ -3,6 +3,7 @@
   "commands": [
     { "cmd": "task --list", "legs": ["ubuntu", "windows", "macos"] },
     { "cmd": "task --dry up", "legs": ["ubuntu", "windows", "macos"] },
+    { "cmd": "task --dry verify", "legs": ["ubuntu", "windows", "macos"] },
     { "cmd": "node --version", "legs": ["ubuntu", "windows", "macos"] }
   ]
 }

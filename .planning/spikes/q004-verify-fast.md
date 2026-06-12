@@ -86,7 +86,20 @@ TOTAL 1756ms PASS
 
 ## 6. Phase-1 baseline timings
 
-**Baseline: to be captured by plan 01-11.** At spike execution time this branch contains no `scripts/checks/`, no `.claude/hooks/tests/`, no `Taskfile.yml`, no `infra/compose.yaml` — there is nothing real to time, and timing stand-ins would be fiction. Plan 01-11 wires `task verify`/`verify:fast`, runs the suite once, and records the first real `GATE`/`TOTAL` block in its SUMMARY as the Phase-1 baseline. RESEARCH (Open Question 3) explicitly directs not to burn spike time benchmarking toolchains that do not exist yet.
+**Baseline captured by plan 01-11 (2026-06-12, Windows 11, node v22.22.0, go-task 3.51.1, Docker Desktop):** first real `task verify` run after wiring the full gate set — verbatim output:
+
+```
+GATE hooks-test 1477ms PASS
+GATE checks-test 2761ms PASS
+GATE claude-md-check 223ms PASS
+GATE settings-lint 68ms PASS
+GATE skills-lint 59ms PASS
+GATE meta-link-lint 88ms PASS
+GATE compose-config 233ms PASS
+TOTAL 4909ms PASS
+```
+
+`task verify:fast` on the same tree: TOTAL 4802ms PASS — both modes well inside the Phase-1 <10s expectation and the 60s contract ceiling. Implementation notes vs §3: the `checks-test` gate also folds in `scripts/tests/` (init-core node:test suite, added after this spike was written — static class, assigned to fast per the §4 assignment rule), and test-dir commands pass explicit `*.test.mjs` file lists because the bare directory form of `node --test` is broken on Windows node 22.22.
 
 ## 7. Growth rule — gate-set evolution Phases 2–8
 

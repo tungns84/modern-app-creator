@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(task *)",
+      "Bash(./mvnw *)",
+      "Bash(npm run *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(kubectl apply*)",
+      "Bash(kubectl delete*)",
+      "Bash(flyway clean*)",
+      "Bash(docker volume rm*)",
+      "Bash(gh secret set*)",
+      "Bash(git reset --hard origin*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-version-warn.mjs\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/t3-plan-gate.mjs\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/t4-command-guard.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

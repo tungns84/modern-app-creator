@@ -41,7 +41,7 @@ decisions:
 metrics:
   duration: "~25 min (continuation agent)"
   completed: 2026-06-12
-  tasks: "2.7/3 (Task 3 blocked on one artifact)"
+  tasks: "3/3"
 ---
 
 # Phase 1 Plan 04: Tier Enforcement Hooks (L1) Summary
@@ -139,3 +139,7 @@ None — all security surface in this plan was pre-registered in the plan's thre
 - Commits 903ba26, 1d57790, 2ce7ea0 — FOUND in `git log`
 - `node --test .claude/hooks/tests/*.test.mjs` — 33/33 pass
 - `.claude/settings.json` — MISSING **by documented blocker** (not a silent failure)
+
+## Task 3 Resolution (post-checkpoint)
+
+`.claude/settings.json` created by the orchestrator with explicit user approval (AskUserQuestion, 2026-06-12) — exact plan-mandated content (PATTERNS.md Code Example 1). Task 3 verify re-run: settings structure OK, `node --test .claude/hooks/tests/*.test.mjs` → fail 0. D-08 go-live complete; live human-check (hook firing in a real session) remains an end-of-phase item.

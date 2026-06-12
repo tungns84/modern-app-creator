@@ -27,6 +27,7 @@ jobs:
       - name: Seed fixture tree (tracked files only, fresh git history)
         shell: bash
         run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
           mkdir -p "$FIXTURE"
           git archive HEAD | tar -x -C "$FIXTURE"
           cd "$FIXTURE"
@@ -40,12 +41,14 @@ jobs:
       - name: Run init.sh (first run)
         shell: bash
         run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
           cd "$FIXTURE"
           ./scripts/init.sh --group-id com.example --artifact-id demo --project-name Demo
 
       - name: Assert idempotency (second run)
         shell: bash
         run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
           cd "$FIXTURE"
           out=$(./scripts/init.sh --group-id com.example --artifact-id demo --project-name Demo)
           echo "$out"
@@ -54,6 +57,7 @@ jobs:
       - name: Emit EOL-normalized sha256 manifest
         shell: bash
         run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
           cd "$FIXTURE"
           node --input-type=module - <<'JS'
           import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -98,6 +102,7 @@ jobs:
       - name: Seed fixture tree (tracked files only, fresh git history)
         shell: bash
         run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
           mkdir -p "$FIXTURE"
           git archive HEAD | tar -x -C "$FIXTURE"
           cd "$FIXTURE"
@@ -127,6 +132,7 @@ jobs:
       - name: Emit EOL-normalized sha256 manifest
         shell: bash
         run: |
+          command -v cygpath >/dev/null && FIXTURE=$(cygpath -u "$FIXTURE")
           cd "$FIXTURE"
           node --input-type=module - <<'JS'
           import { readdirSync, readFileSync, writeFileSync } from "node:fs";

@@ -4,10 +4,6 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:acme_app}
     password: ${SPRING_DATASOURCE_PASSWORD:acme_app}
 
-  flyway:
-    locations:
-      - classpath:db/migration/shared
-
   # Consul disabled by default — activate via 'consul' Spring profile
   cloud:
     consul:
@@ -20,8 +16,8 @@ spring:
           enabled: true
       republish-outstanding-events-on-restart: true
       staleness:
-        published: 10m
-        resubmitted: 30m
+        published: ${acme.observability.staleness-published}
+        resubmitted: ${acme.observability.staleness-resubmitted}
     runtime:
       # We own Flyway; prevent Modulith from running its own migration scripts
       flyway-enabled: false
@@ -46,3 +42,8 @@ management:
   otlp:
     tracing:
       endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+
+acme:
+  observability:
+    staleness-published: 10m
+    staleness-resubmitted: 30m

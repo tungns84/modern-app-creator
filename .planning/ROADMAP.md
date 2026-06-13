@@ -79,12 +79,25 @@ Plans:
   4. Running app exposes liveness/readiness probes, structured JSON logs with MDC PII allowlist, OTel traces, and Prometheus metrics
   5. `verify --fast` completes in <60s with the Q-004-defined gate set, and gate errors name the violated rule plus the fix
 
-**Plans**: 5 plans in 5 waves
-Plans:
+**Plans**: 5 plans in 5 wavesPlans:
+**Wave 1**
+
 - [ ] 02-01-PLAN.md — Maven skeleton + shared reference module + GATE-01/02 (Modulith verify + ArchUnit) wired + Q-1 Consul-compat spike (wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 02-02-PLAN.md — Implement new-module skill + generate appconfig (typed properties + Consul profile switch, FOUND-10) (wave 2)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 02-03-PLAN.md — Generate i18n + caching modules via the skill (vi/en resolution; Caffeine cache) (wave 3)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
 - [ ] 02-04-PLAN.md — Generate observability module: probes + MDC PII allowlist + OTel + Prometheus + EPR cleanup (FOUND-07) (wave 4)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
 - [ ] 02-05-PLAN.md — TDD: JDBC EPR kill-listener (no-loss + no-double-effect) + bounded retry + verify --fast<60s (FOUND-03/05, AGENT-08) (wave 5)
 
 ### Phase 3: Tenancy & Security Seams

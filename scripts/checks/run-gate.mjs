@@ -1,19 +1,20 @@
 // run-gate.mjs — Q-004 verify spine: ordered gate runner with per-gate timing.
-// Zero npm dependencies; only `node`, `git`, `docker` (config parsing only)
-// and `task` are assumed on PATH (Q-004 §2.3).
+// Zero npm dependencies; only `node`, `git`, `docker` (config parsing only),
+// `mvnw`/`mvnw.cmd` (backend gates), and `task` are assumed on PATH (Q-004 §2.3).
 //
 // Contract (Q-004 §5, implemented verbatim):
 //   GATE <name> <millis>ms <PASS|FAIL>     one line per gate
 //   TOTAL <millis>ms <PASS|FAIL>           sum of gate wall times
-// - No short-circuit: every gate runs; exit non-zero if any failed (§2.5).
+// - No short-circuit: every gate in the selected set runs; exit non-zero if any failed (§2.5).
 // - Budget is itself a gate (fast mode only): TOTAL < 60000ms or the run
 //   FAILs even when all gates passed (§5).
 // - On FAIL, after the timing block, one block per failed gate relays the
 //   gate's own rule-named output + fix hint (FR-E08).
 //
-// Phase-1 gate set (Q-004 §3) — fast and full run the SAME static set; the
-// D-19 divergence (container-class gates 8-9) begins in Phase 2. Any new gate
-// MUST be assigned fast vs full-only in the same PR that adds it (§4).
+// Gate `fast` property (Phase-2+):
+//   fast: true  — included in both --mode fast and --mode full
+//   fast: false — included in --mode full only (requires container runtime)
+// Any new gate MUST be assigned fast vs full-only in the same PR that adds it.
 //
 // CLI: node scripts/checks/run-gate.mjs [--mode fast|full]
 import { readdirSync } from "node:fs";
@@ -21,7 +22,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 
-const FAST_BUDGET_MS = 60_000; // contract ceiling (Phase-1 expectation <10s)
+const FAST_BUDGET_MS = 60_000; // contract ceiling (Q-004 §5)
 
 function testFiles(dir) {
   // GLOB-expanded explicitly: `node --test <dir>/` directory form is broken
@@ -31,15 +32,23 @@ function testFiles(dir) {
     .map((f) => join(dir, f));
 }
 
-/** Ordered Phase-1 gate list (names locked by Q-004 §3). */
+/** Full ordered gate list. Each gate carries a `fast` boolean (Phase-2+ contract). */
 export function gates() {
+  // On Windows, .cmd files cannot be spawned with shell:false — must go via cmd /c.
+  // mvnwArgs is spread into argv so: [...mvnwArgs, "-q", "compile", ...]
+  const mvnwArgs = process.platform === "win32"
+    ? ["cmd", "/c", ".\\backend\\mvnw.cmd"]
+    : ["./backend/mvnw"];
   return [
+    // ── Phase 1 gates (all fast) ───────────────────────────────────────────
     {
       name: "hooks-test",
+      fast: true,
       argv: ["node", "--test", ...testFiles(".claude/hooks/tests")],
     },
     {
       name: "checks-test",
+      fast: true,
       // includes scripts/tests/ (init-core suite) — static node:test class,
       // folded into the checks-test gate per Q-004 §4 assignment rule
       argv: [
@@ -51,8 +60,8 @@ export function gates() {
     },
     {
       name: "claude-md-check",
-      // same args as .github/workflows/claude-md-check.yml; --leg defaults
-      // from the platform so local runs behave like the matching CI leg
+      fast: true,
+      // same args as .github/workflows/claude-md-check.yml
       argv: [
         "node",
         "scripts/checks/claude-md-check.mjs",
@@ -62,13 +71,38 @@ export function gates() {
         "--smoke-manifest", "templates/claude/smoke-commands.json",
       ],
     },
-    { name: "settings-lint", argv: ["node", "scripts/checks/settings-lint.mjs"] },
-    { name: "skills-lint", argv: ["node", "scripts/checks/skills-lint.mjs"] },
-    { name: "meta-link-lint", argv: ["node", "scripts/checks/meta-link-lint.mjs"] },
+    { name: "settings-lint",  fast: true, argv: ["node", "scripts/checks/settings-lint.mjs"] },
+    { name: "skills-lint",    fast: true, argv: ["node", "scripts/checks/skills-lint.mjs"] },
+    { name: "meta-link-lint", fast: true, argv: ["node", "scripts/checks/meta-link-lint.mjs"] },
     {
       name: "compose-config",
+      fast: true,
       argv: ["docker", "compose", "-f", "infra/compose.yaml", "config", "-q"],
     },
+
+    // ── Phase 2 gates ──────────────────────────────────────────────────────
+    // backend-compile: confirms pom.xml + sources resolve without starting Spring
+    {
+      name: "backend-compile",
+      fast: true,
+      argv: [...mvnwArgs, "-q", "compile", "-f", "backend/pom.xml"],
+    },
+    // archunit: 7 GATE-02 rules; no container needed; class-file scan only
+    {
+      name: "archunit",
+      fast: true,
+      argv: [...mvnwArgs, "-q", "test",
+             "-Dtest=ArchitectureGatesTest", "-f", "backend/pom.xml"],
+    },
+    // modulith-verify: GATE-01 DAG verify + name-set assertion
+    // -Pbpm-off: Plan 01 state has no bpm package; remove this flag in Plan 07
+    {
+      name: "modulith-verify",
+      fast: true,
+      argv: [...mvnwArgs, "-q", "test",
+             "-Pbpm-off", "-Dtest=ModulithVerifyTest", "-f", "backend/pom.xml"],
+    },
+    // backend-unit + backend-integration + kill-listener-test arrive in Plan 05
   ];
 }
 
@@ -105,10 +139,13 @@ function main() {
     throw new Error(`run-gate: --mode must be fast|full, got "${mode}"`);
   }
 
-  // Phase 1: both modes run the same static set (D-19 seam encoded by the
-  // two Taskfile task definitions; divergence arrives with Phase-2 gates).
+  // fast mode: only gates with fast=true; full mode: all gates
+  const activeGates = mode === "fast"
+    ? gates().filter((g) => g.fast === true)
+    : gates();
+
   const results = [];
-  for (const gate of gates()) {
+  for (const gate of activeGates) {
     const result = runGate(gate); // no short-circuit (Q-004 §2.5)
     results.push(result);
     console.log(`GATE ${result.name} ${result.millis}ms ${result.pass ? "PASS" : "FAIL"}`);

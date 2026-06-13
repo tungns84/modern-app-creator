@@ -126,6 +126,8 @@ if [ -z "$MAVEN_PROJECTBASEDIR" ] ; then
   done
 fi
 
+WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
+
 exec "$JAVACMD" \
   $JVM_CONFIG_MAVEN_PROPS \
   $MAVEN_OPTS \

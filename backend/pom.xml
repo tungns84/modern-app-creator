@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.0.7</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.acme</groupId>
+  <artifactId>app</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>app</name>
+  <description>Acme App — Spring Boot 4 + Spring Modulith 2.0</description>
+
+  <properties>
+    <java.version>25</java.version>
+    <bpm.enabled>true</bpm.enabled>
+    <!-- Passed to Surefire; empty = run all tags -->
+    <groups></groups>
+    <excludedGroups></excludedGroups>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.modulith</groupId>
+        <artifactId>spring-modulith-bom</artifactId>
+        <version>2.0.6</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>2025.1.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <!-- ── Web ─────────────────────────────────────────────────────────────── -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- ── Modulith ──────────────────────────────────────────────────────── -->
+    <!-- JDBC EPR — use new v2 schema (never use-legacy-structure) -->
+    <dependency>
+      <groupId>org.springframework.modulith</groupId>
+      <artifactId>spring-modulith-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.modulith</groupId>
+      <artifactId>spring-modulith-actuator</artifactId>
+    </dependency>
+
+    <!-- ── Flyway Boot-4 pair (BOTH required — boot 4 gotcha) ───────────── -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-flyway</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
+
+    <!-- ── Database ──────────────────────────────────────────────────────── -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- ── Config — Consul KV source (always on classpath; activated by
+              spring.cloud.consul.enabled=true + consul Spring profile) ───── -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-consul-config</artifactId>
+    </dependency>
+
+    <!-- ── Test ──────────────────────────────────────────────────────────── -->
+    <dependency>
+      <groupId>org.springframework.modulith</groupId>
+      <artifactId>spring-modulith-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- spring-boot-testcontainers: provides @ServiceConnection annotation -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Testcontainers 2.x — Boot 4-managed (testcontainers.version=2.0.5 in spring-boot-deps).
+         WARNING: 1.x artifact was "postgresql"; 2.x renamed to "testcontainers-postgresql".
+         Use @ServiceConnection — do NOT use @DynamicPropertySource for datasource wiring. -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- ArchUnit pinned explicitly — Boot does NOT manage archunit version -->
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>1.4.2</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <!-- Surefire: pass bpm.enabled + JUnit Platform tag filter support -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <groups>${groups}</groups>
+          <excludedGroups>${excludedGroups}</excludedGroups>
+          <systemPropertyVariables>
+            <bpm.enabled>${bpm.enabled}</bpm.enabled>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- bpm-off: exclude BPM sources + pass bpm.enabled=false to tests -->
+    <profile>
+      <id>bpm-off</id>
+      <properties>
+        <bpm.enabled>false</bpm.enabled>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>com/acme/app/bpm/**</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

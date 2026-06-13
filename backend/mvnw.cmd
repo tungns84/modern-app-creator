@@ -37,38 +37,32 @@ if "%OS%"=="Windows_NT" setlocal
 
 set MAVEN_CMD_LINE_ARGS=%*
 
-@REM BEGIN WRAPPER CODE
-@REM ===========================================================================================================
+set WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
 
 set MAVEN_PROJECTBASEDIR=%MAVEN_BASEDIR%
-IF "%MAVEN_PROJECTBASEDIR%"=="" (
-  set MAVEN_PROJECTBASEDIR=%~dp0
-  :baseLoop
-  IF EXIST "%MAVEN_PROJECTBASEDIR%pom.xml" GOTO baseDone
-  set MAVEN_PROJECTBASEDIR_TEMP=%MAVEN_PROJECTBASEDIR%..
-  FOR %%i IN ("%MAVEN_PROJECTBASEDIR_TEMP%") DO (
-    set MAVEN_PROJECTBASEDIR=%%~fi
-  )
-  IF "%MAVEN_PROJECTBASEDIR%"=="%~dp0" GOTO baseDone
-  goto baseLoop
-  :baseDone
-)
+IF NOT "%MAVEN_PROJECTBASEDIR%" == "" goto skipBasedirSearch
 
-IF NOT EXIST "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar" (
-  %JAVA_HOME%\bin\java -e "^
-      ... (downloading maven-wrapper.jar)"
+set MAVEN_PROJECTBASEDIR=%~dp0
+:loop
+IF EXIST "%MAVEN_PROJECTBASEDIR%pom.xml" goto loopDone
+set MAVEN_PROJECTBASEDIR_TEMP=%MAVEN_PROJECTBASEDIR%..
+FOR %%i IN ("%MAVEN_PROJECTBASEDIR_TEMP%") DO (
+  set MAVEN_PROJECTBASEDIR=%%~fi
 )
+IF NOT "%MAVEN_PROJECTBASEDIR%" == "%~dp0" goto loop
 
-@REM ===========================================================================================================
-@REM END WRAPPER CODE
+:loopDone
+:skipBasedirSearch
+
+@REM Strip trailing backslash so "-Dmaven.multiModuleProjectDirectory=<path>\" does not
+@REM escape the closing double-quote on Windows (classic batch quoting hazard with %~dp0).
+IF "%MAVEN_PROJECTBASEDIR:~-1%"=="\" SET "MAVEN_PROJECTBASEDIR=%MAVEN_PROJECTBASEDIR:~0,-1%"
 
 @REM Provide a "standardized" way to configure the JVM settings for this Maven Wrapper.
 @REM Strings are not quoted and so multiple arguments should be separated by spaces.
 @REM e.g.
 @REM set JVM_CONFIG_MAVEN_PROPS=-Xmx512m -Xms256m -XX:MaxPermSize=128m
 @REM %JVM_CONFIG_MAVEN_PROPS% are appended to MAVEN_OPTS at the end of this script.
-
-set DOWNLOAD_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar"
 
 %JAVA_HOME%\bin\java %MAVEN_OPTS% %JVM_CONFIG_MAVEN_PROPS% ^
   -classpath "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar" ^

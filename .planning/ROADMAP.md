@@ -79,7 +79,13 @@ Plans:
   4. Running app exposes liveness/readiness probes, structured JSON logs with MDC PII allowlist, OTel traces, and Prometheus metrics
   5. `verify --fast` completes in <60s with the Q-004-defined gate set, and gate errors name the violated rule plus the fix
 
-**Plans**: TBD
+**Plans**: 5 plans in 5 waves
+Plans:
+- [ ] 02-01-PLAN.md — Maven skeleton + shared reference module + GATE-01/02 (Modulith verify + ArchUnit) wired + Q-1 Consul-compat spike (wave 1)
+- [ ] 02-02-PLAN.md — Implement new-module skill + generate appconfig (typed properties + Consul profile switch, FOUND-10) (wave 2)
+- [ ] 02-03-PLAN.md — Generate i18n + caching modules via the skill (vi/en resolution; Caffeine cache) (wave 3)
+- [ ] 02-04-PLAN.md — Generate observability module: probes + MDC PII allowlist + OTel + Prometheus + EPR cleanup (FOUND-07) (wave 4)
+- [ ] 02-05-PLAN.md — TDD: JDBC EPR kill-listener (no-loss + no-double-effect) + bounded retry + verify --fast<60s (FOUND-03/05, AGENT-08) (wave 5)
 
 ### Phase 3: Tenancy & Security Seams
 
@@ -179,7 +185,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Dogfood Bootstrap & Enforcement | 12/12 | Complete    | 2026-06-12 |
-| 2. Backend Foundation | 0/TBD | Not started | - |
+| 2. Backend Foundation | 0/5 | Planned | - |
 | 3. Tenancy & Security Seams | 0/TBD | Not started | - |
 | 4. Contract Pipeline & Frontend Foundation | 0/TBD | Not started | - |
 | 5. IAM Feature Surface | 0/TBD | Not started | - |

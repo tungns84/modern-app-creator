@@ -102,7 +102,15 @@ export function gates() {
       argv: [...mvnwArgs, "-q", "test",
              "-Pbpm-off", "-Dtest=ModulithVerifyTest", "-f", "backend/pom.xml"],
     },
-    // backend-unit + backend-integration + kill-listener-test arrive in Plan 05
+    // backend-unit: fast gate — @Tag("unit") tests, no containers
+    { name: "backend-unit", fast: true,
+      argv: [...mvnwArgs, "-q", "test", "-Dgroups=unit", "-f", "backend/pom.xml"] },
+    // backend-integration: full-only — Testcontainers required
+    { name: "backend-integration", fast: false,
+      argv: [...mvnwArgs, "-q", "verify", "-Dgroups=integration", "-f", "backend/pom.xml"] },
+    // kill-listener-test: full-only — EPR durability proof (Testcontainers required)
+    { name: "kill-listener-test", fast: false,
+      argv: [...mvnwArgs, "-q", "verify", "-Dtest=KillListenerTest", "-f", "backend/pom.xml"] },
   ];
 }
 

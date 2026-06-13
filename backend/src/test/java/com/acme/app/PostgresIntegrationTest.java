@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @Testcontainers
 @Tag("integration")
-abstract class PostgresIntegrationTest {
+public abstract class PostgresIntegrationTest {
 
     // Testcontainers 2.x + Boot 4: @ServiceConnection replaces @DynamicPropertySource
     // for datasource wiring. Do NOT use @DynamicPropertySource here.

@@ -55,5 +55,32 @@ tiers and the anti-stack list — none of that is repeated here.
   bytecode-touching tool added later must state class-file-69 support.
 - JUnit is 6 (the renamed Jupiter line); Spring Boot 4 / Framework 7 /
   Modulith 2 — check managed versions before pinning anything.
+- **Boot 4 autoconfigure packages moved** — per-feature JARs, new package pattern `org.springframework.boot.<feature>.autoconfigure`:
+  - Flyway: `org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration` / `FlywayConfigurationCustomizer` (NOT `...boot.autoconfigure.flyway`)
+  - JDBC/DataSource: `org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration` / `DataSourceTransactionManagerAutoConfiguration` (NOT `...boot.autoconfigure.jdbc`)
+  - Any `@TestPropertySource` exclude list must use Boot 4 paths or exclusions silently no-op.
+- **`@ApplicationModuleTest` for modules consuming `appconfig::spi`** — use `BootstrapMode.DIRECT_DEPENDENCIES` so the `appconfig` module is loaded and `AppConfigPropertiesRegistration` can register its beans. STANDALONE mode won't include `appconfig` root beans. Also, `@Configuration` classes in these modules MUST inject `appconfig.spi` properties via **constructor injection** — Modulith's DIRECT_DEPENDENCIES bean graph only follows constructor parameters (not `@Bean` method parameters) when deciding what to load from dependency modules.
+  ```java
+  @ApplicationModuleTest(mode = BootstrapMode.DIRECT_DEPENDENCIES)
+  class MyModuleTest { ... }
+  
+  // In config class — constructor injection required, NOT @Bean method param:
+  class MyConfig {
+      private final MyProperties props;
+      MyConfig(MyProperties props) { this.props = props; }
+      @Bean MyService myService() { return new MyServiceImpl(props); }
+  }
+  ```
+- **`@ApplicationModuleTest` for no-DB modules** — modules without DataSource (`hasTables=false` and no events) need this full exclusion list to prevent Spring Modulith's JDBC event infra from trying to connect to Postgres:
+  ```
+  spring.autoconfigure.exclude=
+    org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration,
+    org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration,
+    org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration,
+    org.springframework.modulith.events.jdbc.JdbcEventPublicationAutoConfiguration,
+    org.springframework.modulith.events.config.EventPublicationAutoConfiguration,
+    org.springframework.modulith.events.config.EventExternalizationAutoConfiguration
+  ```
+  The `new-module` scaffold generates this automatically in the module test stub.
 
 Never put frontend content here; never duplicate root `CLAUDE.md`.

@@ -1,6 +1,9 @@
 # Claude Code personal/dev settings (preset settings.json IS committed)
 .claude/settings.local.json
 
+# Maven build output
+backend/target/
+
 # Dependencies
 node_modules/
 

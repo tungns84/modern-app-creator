@@ -982,7 +982,9 @@ This is a greenfield phase — no existing modules, no existing data, no renamed
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> All four open questions are resolved by Phase 2 plan decisions (see each RESOLVED: line below). Resolutions are binding for execution.
 
 ### Q-1: Spring Cloud + Boot 4.0.x Consul Compatibility (HIGH PRIORITY — D-07 locked)
 
@@ -990,24 +992,28 @@ This is a greenfield phase — no existing modules, no existing data, no renamed
 **What's unclear:** Which Spring Cloud release train (e.g., `2025.x`, `2024.x`) is compatible with Spring Boot 4.0.x? Does Spring Cloud Consul 4.x support Boot 4? Is the `spring.config.import: optional:consul:` pattern stable in the Boot 4 era?
 **Risk if wrong:** Consul dependency fails to compile or autoconfigure; D-08 Testcontainers test cannot run; FOUND-10 partial.
 **Recommendation:** The planner MUST add a "verify Spring Cloud compatibility" task in Wave 0, before any consul code is written. Check https://spring.io/projects/spring-cloud for the Boot 4 compatible release train. If no compatible train exists, flag as blocker before implementing D-07.
+**RESOLVED:** Plan 01 Task 1 is the Wave-0 spike (.planning/spikes/q1-spring-cloud-consul-compat.md, VERDICT COMPATIBLE|BLOCKED). Plan 02 Task 2 gates the Consul BOM/profile on that verdict; BLOCKED defers Consul to env+ConfigMap and skips the Plan 05 Consul Testcontainers test.
 
 ### Q-2: Bounded Retry Implementation in Modulith 2.0 (MEDIUM PRIORITY — D-12)
 
 **What we know:** D-12 requires bounded retries. Modulith 2.0 republishes outstanding events on restart but does not natively cap retry count.
 **What's unclear:** Does Modulith 2.0.6 expose `EventPublicationRepository` as a stable bean for decoration? Or is the retry count better tracked in the listener itself via a separate counter table?
 **Recommendation:** Planner should spec out Option A (listener-side counter using natural key) for Phase 2 since it needs no framework internals. A separate `event_retry_tracking` table (or a check-before-write count in each idempotent listener) is sufficient for the bounded-retry proof.
+**RESOLVED:** Option A (listener-side attempt counter) adopted in Plan 05 Task 1 -- shared/events/BoundedRetryListenerSupport reads EventRetryProperties from appconfig::spi; BoundedRetryTest proves the bound. No framework-internal decoration.
 
 ### Q-3: ArchUnit 1.4.2 + JUnit 6 Compatibility (MEDIUM PRIORITY)
 
 **What we know:** ArchUnit 1.4.2 supports Java 26 (class file 70) via ASM upgrade. JUnit 6 is the renamed Jupiter line.
 **What's unclear:** Does ArchUnit 1.4.2 support the JUnit 6 module name / runner class? Or does it still bind to JUnit 5 extension API (which should be binary-compatible)?
 **Recommendation:** Plan a fallback: if `@ArchTest` runner fails under JUnit 6, rewrite ArchUnit tests using `ArchUnit.check()` in plain `@Test` methods. This is equally effective and avoids JUnit runner dependencies.
+**RESOLVED:** Plan 01 Task 3 carries the fallback explicitly -- if @ArchTest/@AnalyzeClasses fail under JUnit 6, use plain @Test + rule.check(importedClasses) over a shared ClassFileImporter().importPackages(com.acme.app); the chosen path is recorded in the SUMMARY.
 
 ### Q-4: Modulith Per-Module Flyway Auto-Discovery (LOW PRIORITY)
 
 **What we know:** `spring.modulith.runtime.flyway-enabled=true` exists in Modulith config. Boot 4 Flyway auto-configures from `spring-boot-starter-flyway`.
 **What's unclear:** Does Modulith 2.0's `flyway-enabled` flag automatically pick up `db/migration/<module>/` paths, or must they be registered explicitly in a `FlywayConfigurationCustomizer` bean?
 **Recommendation:** Plan for explicit registration in `FlywayConfigurationCustomizer` — safer and more transparent. The `new-module` skill can append to this customizer as part of its output contract.
+**RESOLVED:** Explicit registration chosen. Plan 02 Task 2 creates the single appconfig/ModuleFlywayLocationsCustomizer (FlywayConfigurationCustomizer) that owns per-module locations; the Plan 02 new-module scaffold appends classpath:db/migration/<module> to THAT file when hasTables=true. Plan 01 seeds the shared location and SharedFlywaySchemaTest proves it on real PG.
 
 ---
 

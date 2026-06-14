@@ -10,6 +10,14 @@ node_modules/
 # Task runner cache
 .task/
 
+# IDE
+.idea/
+backend/.idea/
+
+# GSD agent worktrees + research cache (local, regenerable)
+.claude/worktrees/
+.planning/research/.cache/
+
 # OS noise
 Thumbs.db
 .DS_Store

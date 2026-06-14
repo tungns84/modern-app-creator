@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/acme_app}
+    username: ${SPRING_DATASOURCE_USERNAME:acme_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:acme_app}
+
+  # Consul disabled by default — activate via 'consul' Spring profile
+  cloud:
+    consul:
+      enabled: false
+
+  modulith:
+    events:
+      jdbc:
+        schema-initialization:
+          enabled: true
+      republish-outstanding-events-on-restart: true
+      staleness:
+        published: ${acme.observability.staleness-published}
+        resubmitted: ${acme.observability.staleness-resubmitted}
+    runtime:
+      # We own Flyway; prevent Modulith from running its own migration scripts
+      flyway-enabled: false
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info,metrics
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+
+acme:
+  observability:
+    staleness-published: 10m
+    staleness-resubmitted: 30m

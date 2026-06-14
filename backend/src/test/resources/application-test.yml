@@ -1,0 +1,8 @@
+spring:
+  # @ServiceConnection (Testcontainers 2.x) overrides spring.datasource.* for integration tests
+  cloud:
+    consul:
+      discovery:
+        enabled: false
+      config:
+        enabled: false

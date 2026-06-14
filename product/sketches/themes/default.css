@@ -1,0 +1,23 @@
+/* Sketch theme — terminal mood for cowork-cli mockups */
+:root {
+  --term-bg: #0d1117;
+  --term-bg-soft: #161b22;
+  --term-fg: #e6edf3;
+  --term-dim: #8b949e;
+  --term-faint: #484f58;
+  --term-cyan: #56d4dd;
+  --term-green: #3fb950;
+  --term-yellow: #d29922;
+  --term-red: #f85149;
+  --term-magenta: #bc8cff;
+  --term-blue: #58a6ff;
+  --term-font: "Cascadia Code", "JetBrains Mono", Consolas, "Courier New", monospace;
+  --ui-font: ui-sans-serif, "Segoe UI", system-ui, sans-serif;
+  --radius: 8px;
+}
+body {
+  margin: 0;
+  background: #010409;
+  color: var(--term-fg);
+  font-family: var(--ui-font);
+}

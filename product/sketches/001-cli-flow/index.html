@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sketch 001 — cowork-cli terminal flow</title>
+<link rel="stylesheet" href="../themes/default.css">
+<style>
+  .toolbar {
+    display: flex; align-items: center; gap: 16px;
+    padding: 10px 20px; background: var(--term-bg-soft);
+    border-bottom: 1px solid var(--term-faint);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .toolbar h1 { font-size: 14px; margin: 0; font-weight: 600; color: var(--term-dim); }
+  .tabs { display: flex; gap: 6px; }
+  .tab {
+    padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--term-faint);
+    background: transparent; color: var(--term-dim); cursor: pointer; font-size: 13px;
+  }
+  .tab.active { background: var(--term-cyan); color: #04282b; border-color: var(--term-cyan); font-weight: 600; }
+  .controls { margin-left: auto; display: flex; gap: 8px; }
+  .btn {
+    padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--term-faint);
+    background: var(--term-bg); color: var(--term-fg); cursor: pointer; font-size: 13px;
+  }
+  .btn:hover { border-color: var(--term-cyan); }
+  .variant-desc { padding: 10px 20px; color: var(--term-dim); font-size: 13px; max-width: 980px; }
+  .term-wrap { display: flex; justify-content: center; padding: 14px 20px 60px; }
+  .terminal {
+    width: 880px; max-width: 95vw; min-height: 560px;
+    background: var(--term-bg); border: 1px solid var(--term-faint);
+    border-radius: 10px; box-shadow: 0 16px 48px rgba(0,0,0,.6); overflow: hidden;
+  }
+  .term-titlebar {
+    display: flex; align-items: center; gap: 8px; padding: 9px 14px;
+    background: var(--term-bg-soft); border-bottom: 1px solid var(--term-faint);
+    font-size: 12px; color: var(--term-dim); font-family: var(--ui-font);
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background:#ff5f56 } .dot.y { background:#ffbd2e } .dot.g { background:#27c93f }
+  .term-title { margin-left: 8px; }
+  .term-body {
+    padding: 18px 22px; font-family: var(--term-font); font-size: 13.5px;
+    line-height: 1.65; white-space: pre-wrap; word-break: break-word;
+  }
+  .term-body .line { min-height: 1.65em; }
+  .c-cyan { color: var(--term-cyan) } .c-green { color: var(--term-green) }
+  .c-dim { color: var(--term-dim) } .c-faint { color: var(--term-faint) }
+  .c-yellow { color: var(--term-yellow) } .c-mag { color: var(--term-magenta) }
+  .c-blue { color: var(--term-blue) } .c-red { color: var(--term-red) }
+  .b { font-weight: 700 } .inv { background: var(--term-cyan); color: #04282b; padding: 0 6px; border-radius: 3px; }
+  .cursor::after { content: "▋"; color: var(--term-cyan); animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0 } }
+  .hint { text-align:center; color: var(--term-faint); font-size: 12px; padding-bottom: 30px; }
+  .win-star { color: var(--term-yellow); }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <h1>Sketch 001 · cowork-cli flow</h1>
+    <div class="tabs">
+      <button class="tab active" data-v="A" onclick="switchVariant('A')">Variant A: Clack Minimal</button>
+      <button class="tab" data-v="B" onclick="switchVariant('B')">Variant B: Rich</button>
+      <button class="tab" data-v="C" onclick="switchVariant('C')">Variant C: Quiet</button>
+    </div>
+    <div class="controls">
+      <button class="btn" onclick="replay()">↻ Replay</button>
+      <button class="btn" onclick="finishNow()">⏭ Kết quả cuối</button>
+    </div>
+  </div>
+  <div class="variant-desc" id="vdesc"></div>
+  <div class="term-wrap">
+    <div class="terminal">
+      <div class="term-titlebar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">tungns@dev — npx cowork-cli@latest</span>
+      </div>
+      <div class="term-body" id="screen"></div>
+    </div>
+  </div>
+  <div class="hint">Click vào terminal để tua nhanh từng bước · Replay để xem lại từ đầu</div>
+
+<script>
+/* ============ Script per variant: array of lines; each line = {t: html, d: delay ms} ============ */
+
+const G = `<span class="c-faint">│</span>`;
+const VA = [
+  {t:`<span class="c-faint">┌</span>  <span class="c-cyan b">cowork-cli</span> <span class="c-dim">v0.1.0 — AI-cowork project generator (Claude Code)</span>`, d:500},
+  {t:`${G}`, d:200},
+  {t:`<span class="c-green">◇</span>  Tên dự án?\n${G}  <span class="b">acme-portal</span>`, d:900},
+  {t:`<span class="c-green">◇</span>  groupId?\n${G}  <span class="b">com.acme</span>`, d:800},
+  {t:`<span class="c-green">◇</span>  artifactId?\n${G}  <span class="b">acme-portal</span>`, d:800},
+  {t:`${G}  <span class="c-dim">packageRoot:</span> <span class="c-blue">com.acme.acmeportal</span> <span class="c-faint">(tự suy ra)</span>`, d:600},
+  {t:`${G}`, d:200},
+  {t:`<span class="c-green">◇</span>  Tech stack preset?\n${G}  <span class="inv">react-springboot-modulith</span> <span class="c-dim">— React 19 + Spring Boot 4 Modulith, 12 modules</span>`, d:1000},
+  {t:`${G}`, d:200},
+  {t:`<span class="c-green">◇</span>  Mức nghiêm ngặt duyệt plan?\n${G}  <span class="c-cyan">●</span> <span class="b">standard</span> <span class="c-dim">— hard gate từ vùng rủi ro cao (T3)</span>\n${G}  <span class="c-faint">○ strict — hard gate từ T2</span>`, d:1000},
+  {t:`<span class="c-green">◇</span>  Design workflow (Stitch + DESIGN.md)?  <span class="b c-green">Yes</span>`, d:700},
+  {t:`<span class="c-green">◇</span>  BPM module (Flowable 8)?  <span class="b c-dim">No</span>`, d:700},
+  {t:`${G}`, d:300},
+  {t:`<span class="c-mag">◆</span>  <span class="b">Generating acme-portal…</span>`, d:500},
+  {t:`${G}  <span class="c-green">✓</span> Render template <span class="c-dim">— 1.247 files, 0 placeholder sót</span>`, d:900},
+  {t:`${G}  <span class="c-green">✓</span> Claude Code pack <span class="c-dim">— CLAUDE.md ×3 · skills ×5 · hooks · .mcp.json</span>`, d:800},
+  {t:`${G}  <span class="c-green">✓</span> git init <span class="c-dim">— initial commit 9a3f21c</span>`, d:700},
+  {t:`${G}`, d:200},
+  {t:`<span class="c-green">◇</span>  Cài dependencies ngay?  <span class="b c-green">Yes</span>\n${G}  <span class="c-green">✓</span> npm ci <span class="c-dim">(42s)</span> · <span class="c-green">✓</span> mvnw dependency:resolve <span class="c-dim">(1m08s)</span>`, d:1300},
+  {t:`<span class="c-green">◇</span>  Sanity build?  <span class="b c-green">Yes</span>\n${G}  <span class="c-green">✓</span> verify --fast <span class="c-dim">(47s — compile + unit + lint)</span>`, d:1200},
+  {t:`${G}`, d:300},
+  {t:`<span class="c-faint">└</span>  <span class="c-green b">✓ Xong trong 3m12s.</span>`, d:600},
+  {t:``, d:200},
+  {t:`   <span class="b">Next steps</span>\n   <span class="c-cyan">cd acme-portal</span>\n   <span class="c-cyan">task up</span>            <span class="c-dim"># boot PG + Redis + Mailpit + MinIO</span>\n   <span class="c-cyan">claude</span>             <span class="c-dim"># mở Claude Code — CLAUDE.md dẫn đường</span>\n\n   <span class="c-dim">Người mới với Claude Code? Đọc</span> <span class="c-yellow">ONBOARDING.md</span> <span class="c-dim">và làm theo</span> <span class="c-yellow">specs/000-example/</span>`, d:400},
+];
+
+const VB = [
+  {t:`<span class="c-mag b">  ██████╗ ██████╗ ██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗</span>\n<span class="c-mag b"> ██╔════╝██╔═══██╗██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝</span>\n<span class="c-mag b"> ██║     ██║   ██║██║ █╗ ██║██║   ██║██████╔╝█████╔╝ </span>\n<span class="c-mag b"> ╚██████╗╚██████╔╝╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗</span>\n<span class="c-mag b">  ╚═════╝ ╚═════╝  ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝</span>\n <span class="c-dim">AI-cowork scaffold generator · v0.1.0 · dành riêng cho Claude Code</span>`, d:700},
+  {t:``, d:300},
+  {t:`<span class="c-blue b">━━ ① Project identity ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>`, d:400},
+  {t:`  <span class="c-cyan">?</span> Tên dự án <span class="c-dim">›</span> <span class="b">acme-portal</span>\n  <span class="c-cyan">?</span> groupId <span class="c-dim">›</span> <span class="b">com.acme</span>\n  <span class="c-cyan">?</span> artifactId <span class="c-dim">›</span> <span class="b">acme-portal</span>\n  <span class="c-green">→</span> packageRoot: <span class="c-blue b">com.acme.acmeportal</span> <span class="c-faint">(computed)</span>`, d:1400},
+  {t:``, d:200},
+  {t:`<span class="c-blue b">━━ ② Preset ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>`, d:300},
+  {t:`  <span class="c-green">❯</span> <span class="inv">react-springboot-modulith</span>\n    <span class="c-dim">React 19 · Spring Boot 4 Modulith · 12 modules · multi-IdP · i18n vi/en · WCAG 2.2 AA</span>`, d:900},
+  {t:``, d:200},
+  {t:`<span class="c-blue b">━━ ③ Methodology ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>`, d:300},
+  {t:`  <span class="c-cyan">?</span> HITL strictness <span class="c-dim">›</span> <span class="b">standard</span> <span class="c-dim">(hard gate từ T3)</span>\n  <span class="c-cyan">?</span> Design workflow (Stitch) <span class="c-dim">›</span> <span class="c-green b">ON</span>\n  <span class="c-cyan">?</span> BPM (Flowable 8) <span class="c-dim">›</span> <span class="c-dim b">OFF</span>`, d:1100},
+  {t:``, d:200},
+  {t:`<span class="c-blue b">━━ ④ Generate ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>`, d:300},
+  {t:`  Render template      <span class="c-green">████████████████████</span> 100% <span class="c-dim">1.247 files</span>`, d:900},
+  {t:`  Claude Code pack     <span class="c-green">████████████████████</span> 100% <span class="c-dim">CLAUDE.md ×3 · skills ×5 · hooks</span>`, d:700},
+  {t:`  git init             <span class="c-green">✓</span> <span class="c-dim">initial commit 9a3f21c</span>`, d:500},
+  {t:`  npm ci + mvn resolve <span class="c-green">████████████████████</span> 100% <span class="c-dim">1m50s</span>`, d:900},
+  {t:`  verify --fast        <span class="c-green">✓ PASS</span> <span class="c-dim">47s — compile + unit + lint</span>`, d:800},
+  {t:``, d:300},
+  {t:`<span class="c-green">╔══════════════════════════════════════════════════════╗</span>\n<span class="c-green">║</span>  <span class="c-green b">✓ acme-portal sẵn sàng — 3m12s</span>                       <span class="c-green">║</span>\n<span class="c-green">╠══════════════════════════════════════════════════════╣</span>\n<span class="c-green">║</span>  <span class="c-cyan">cd acme-portal && task up</span>                            <span class="c-green">║</span>\n<span class="c-green">║</span>  <span class="c-cyan">claude</span>  <span class="c-dim">— CLAUDE.md sẽ dẫn đường</span>                     <span class="c-green">║</span>\n<span class="c-green">║</span>                                                      <span class="c-green">║</span>\n<span class="c-green">║</span>  <span class="c-dim">Mới với Claude Code →</span> <span class="c-yellow">ONBOARDING.md</span>                  <span class="c-green">║</span>\n<span class="c-green">║</span>  <span class="c-dim">Tutorial →</span> <span class="c-yellow">specs/000-example/</span>                       <span class="c-green">║</span>\n<span class="c-green">╚══════════════════════════════════════════════════════╝</span>`, d:500},
+];
+
+const VC = [
+  {t:`<span class="c-dim">cowork-cli 0.1.0</span>`, d:400},
+  {t:`name: <span class="b">acme-portal</span>   groupId: <span class="b">com.acme</span>   artifactId: <span class="b">acme-portal</span>\npackageRoot=com.acme.acmeportal <span class="c-faint">(computed)</span>`, d:1000},
+  {t:`preset: <span class="b">react-springboot-modulith</span>   strictness: <span class="b">standard</span>   design: <span class="b">on</span>   bpm: <span class="b">off</span>`, d:900},
+  {t:``, d:200},
+  {t:`render        <span class="c-green">ok</span>  <span class="c-dim">1247 files</span>\nclaude-pack   <span class="c-green">ok</span>  <span class="c-dim">CLAUDE.md x3, skills x5, hooks, mcp</span>\ngit           <span class="c-green">ok</span>  <span class="c-dim">9a3f21c</span>\ninstall       <span class="c-green">ok</span>  <span class="c-dim">1m50s</span>\nverify-fast   <span class="c-green">ok</span>  <span class="c-dim">47s</span>`, d:1600},
+  {t:``, d:200},
+  {t:`<span class="c-green b">done</span> <span class="c-dim">3m12s</span>`, d:400},
+  {t:`<span class="c-dim">next:</span> cd acme-portal; task up; claude\n<span class="c-dim">docs:</span> ONBOARDING.md, specs/000-example/`, d:400},
+];
+
+const DESCS = {
+  A: `<b>A — Clack Minimal ★ đề xuất:</b> đúng ngôn ngữ @clack/prompts (│ ◇ ◆, pipe dọc), mỗi câu hỏi một khối, màu tiết chế. Quen mắt với người dùng create-t3-app/astro. Phù hợp persona beginner — flow đọc như câu chuyện.`,
+  B: `<b>B — Rich:</b> banner ASCII, section ①–④ khớp PRD journey, progress bar, box kết quả. Nhiều "wow" cho demo stakeholder nhưng ồn khi dùng hằng ngày, khó grep log.`,
+  C: `<b>C — Quiet:</b> tối giản kiểu CI-log, một dòng một fact. Tốt cho non-interactive/agent gọi (--yes), nhưng lạnh với người mới — thiếu cảm giác dẫn dắt.`
+};
+
+const SCRIPTS = { A: VA, B: VB, C: VC };
+let current = 'A', timer = null, idx = 0;
+
+function render(upTo) {
+  const s = document.getElementById('screen');
+  const lines = SCRIPTS[current].slice(0, upTo);
+  s.innerHTML = lines.map(l => `<div class="line">${l.t}</div>`).join('');
+  if (upTo < SCRIPTS[current].length) {
+    s.innerHTML += `<div class="line cursor"></div>`;
+  }
+  s.parentElement.scrollTop = s.parentElement.scrollHeight;
+}
+
+function step() {
+  if (idx >= SCRIPTS[current].length) return;
+  idx++;
+  render(idx);
+  if (idx < SCRIPTS[current].length) {
+    timer = setTimeout(step, SCRIPTS[current][idx].d);
+  }
+}
+
+function play() {
+  clearTimeout(timer); idx = 0; render(0);
+  timer = setTimeout(step, 400);
+}
+
+function replay() { play(); }
+function finishNow() { clearTimeout(timer); idx = SCRIPTS[current].length; render(idx); }
+
+function switchVariant(v) {
+  current = v;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.v === v));
+  document.getElementById('vdesc').innerHTML = DESCS[v];
+  play();
+}
+
+document.querySelector('.terminal').addEventListener('click', () => {
+  clearTimeout(timer);
+  if (idx < SCRIPTS[current].length) { idx++; render(idx); if (idx < SCRIPTS[current].length) timer = setTimeout(step, SCRIPTS[current][idx].d); }
+});
+
+switchVariant('A');
+</script>
+</body>
+</html>

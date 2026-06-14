@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    consul:
+      enabled: true
+      config:
+        enabled: true
+        # optional: prefix avoids clashing with other apps on the same Consul instance
+        prefix: config
+        default-context: acme-app
+        data-key: application.yml
+        format: YAML
+      discovery:
+        enabled: true
+        health-check-path: /actuator/health
+        prefer-ip-address: true

@@ -3,27 +3,49 @@ name: new-module
 description: Scaffold a new Spring Modulith module — use when asked to add a backend module, bounded context, or new top-level package under com.acme.app.
 ---
 
-# new-module — Skeleton contract (implemented in Phase 2)
+# new-module
 
-## CONTRACT
+Scaffold a new Spring Modulith module in `com.acme.app`.
 
-tier: T3 — a new module is a boundary change; skill output includes a
-pre-filled specs/NNN plan.md template so the H2 approval artifact exists
-before any scaffold write.
+## Usage
 
-**Inputs:** module name, allowed dependencies (other module names), whether
-the module exposes events and/or an `::spi` surface.
+```bash
+node scripts/new-module/scaffold.mjs <name> [options]
+```
 
-**Outputs:**
-- `backend/src/main/java/com/acme/app/<module>/package-info.java` with
-  `@ApplicationModule(allowedDependencies = ...)`
-- `spi/` and `events/` packages (when declared)
-- per-module Flyway folder
-- `@ApplicationModuleTest` stub
-- module-count assertion bump
-- pre-filled `specs/NNN-<module>/plan.md` template (Approved-by left empty)
+Options:
+- `--allowed-deps d1,d2`  modules this module may import (comma-separated)
+- `--exposes-spi`          create `spi/package-info.java` with `@NamedInterface("spi")`
+- `--exposes-events`       create `events/.gitkeep` placeholder
+- `--has-tables`           create `db/migration/<name>/` and register in ModuleFlywayLocationsCustomizer
+- `--root <path>`          override project root (default: repo root)
+- `--dry-run`              print actions without writing
 
-## Status
+## Outputs
 
-Skeleton — implemented in Phase 2. Do NOT improvise an implementation from
-this contract; report to the human instead.
+| File | Notes |
+|------|-------|
+| `backend/src/main/java/com/acme/app/<name>/package-info.java` | T3 — `@ApplicationModule(allowedDependencies=...)` |
+| `backend/src/main/java/com/acme/app/<name>/spi/package-info.java` | T3 — `@NamedInterface("spi")` — only when `--exposes-spi` |
+| `backend/src/main/java/com/acme/app/<name>/events/.gitkeep` | Only when `--exposes-events` |
+| `backend/src/main/resources/db/migration/<name>/` | Only when `--has-tables` |
+| `backend/src/test/java/com/acme/app/<name>/<Name>ModuleTest.java` | `@ApplicationModuleTest` stub |
+| `specs/NNN-<name>/spec.md` | Draft spec |
+| `specs/NNN-<name>/plan.md` | Plan template (`Approved-by:` blank — fill before T3 writes) |
+
+Side effects:
+- Bumps `ModulithVerifyTest.BASE_MODULES` with `"<name>"`
+- Appends `classpath:db/migration/<name>` to `ModuleFlywayLocationsCustomizer` when `--has-tables`
+
+All outputs are idempotent (existing files are skipped).
+
+## Tier
+
+T3 — scaffold writes `package-info.java` files which are T3 path.
+Specs plan.md template has `Approved-by:` blank. Fill it with the spec number approval before proceeding.
+
+## Tests
+
+```bash
+node --test scripts/new-module/tests/scaffold.test.mjs
+```

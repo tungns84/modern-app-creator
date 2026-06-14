@@ -23,8 +23,8 @@ export const EXPECTED_SKILLS = [
   "new-feature",
   "design-implement",
 ];
-export const FULL_SKILLS = ["plan", "verify"];
-export const SKELETON_SKILLS = ["new-module", "new-feature", "design-implement"];
+export const FULL_SKILLS = ["plan", "verify", "new-module"];
+export const SKELETON_SKILLS = ["new-feature", "design-implement"];
 const FULL_BODY_MIN_LINES = 30; // a "full" skill is substantive, not a stub
 
 /**

@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 2 complete — all 5 plans executed; awaiting H2 approval + Phase 3 start
-last_updated: "2026-06-13T18:10:00.000Z"
-last_activity: 2026-06-13 -- Phase 02 complete; fast-gate suite 11/11 PASS 25633ms; KillListenerTest 2/2 PASS
+status: planning
+stopped_at: Phase 3 context gathered
+last_updated: "2026-06-14T03:13:09.956Z"
+last_activity: "2026-06-14 -- Phase-2 backend substrate reconciled onto master via chore/reconcile-phase02 (PR #6 had merged docs only; feat/008 code + appconfig unified)"
 progress:
   total_phases: 8
   completed_phases: 2
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-11)
 
 **Core value:** A project generated from this preset is architecture-safe by machine — zero gate-covered violations and zero unapproved T3 changes can reach main; quality does not depend on reviewers or agent prompting.
-**Current focus:** Phase 02 — backend-foundation COMPLETE; next: Phase 03
+**Current focus:** Phase 03 — planning (Phase 02 substrate reconciled to master 2026-06-14; original PR #6 merged docs only — backend code landed via chore/reconcile-phase02)
 
 ## Current Position
 
-Phase: 02 (backend-foundation) — COMPLETE
+Phase: 02 (backend-foundation) — substrate reconciled to master 2026-06-14 (feat/008 backend + uncommitted appconfig unified via chore/reconcile-phase02; original PR #6 was docs-only)
 Plan: 5 of 5 (all plans complete)
-Status: Phase 02 complete; awaiting H2 approval checkpoint
-Last activity: 2026-06-13 -- Phase 02 complete; JDBC EPR durability proof + bounded retry + Q-004 gate split
+Status: Ready for Phase 03 planning (pending reconcile-branch build verify + merge)
+Last activity: 2026-06-14 -- Phase-2 backend substrate + appconfig unified on master branch; build verification in progress
 
 Progress: [██░░░░░░░░] 25%
 
@@ -36,7 +36,7 @@ Progress: [██░░░░░░░░] 25%
 
 **Velocity:**
 
-- Total plans completed: 12
+- Total plans completed: 17
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -77,6 +77,8 @@ None yet.
 - ADRs required before implementation: FR-B11 permission sync, FR-B13 undeclared-permission detection
 - Q-006 (Flowable 8) blocks all Phase 7 BPM work — do not plan Phase 7 details before the spike runs
 - MapStruct/JaCoCo behavior on the pinned JDK to be confirmed in first CI run (toolchain smoke in Phase 1)
+- DB credentials mismatch (compose uses app/app/app, application.yml defaults acme_app) — runbook note, no code fix yet
+- Port 8080 conflict (Keycloak + backend) — runbook note, no code fix yet
 
 ## Deferred Items
 
@@ -88,6 +90,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-12T18:05:33.299Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-backend-foundation/02-CONTEXT.md
+Last session: 2026-06-14T03:13:09.941Z
+Stopped at: Phase 3 context gathered
+Resume file: .planning/phases/03-tenancy-security-seams/03-CONTEXT.md

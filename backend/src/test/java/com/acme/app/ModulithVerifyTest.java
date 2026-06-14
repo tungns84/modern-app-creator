@@ -10,8 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ModulithVerifyTest {
 
-    // Plan 01 baseline; updated per plan as modules are added
-    static final Set<String> BASE_MODULES = Set.of("shared");
+    // Phase-02 module set; updated per plan as modules are added (Phase 3 adds "iam")
+    static final Set<String> BASE_MODULES = Set.of("shared", "appconfig", "caching", "i18n", "observability");
 
     @Test
     void modulesVerify() {
